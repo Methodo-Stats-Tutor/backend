@@ -1,0 +1,75 @@
+
+
+# ASPECTS :
+
+- Interface -> FAIT
+- Sécurité -> FAIT
+- Chargement/Annotation de documents -> FAIT
+- QCM -> FAIT
+- navigation onthologie + choix des tags  -> PARTIEL
+- Regles Web Sémantique -> NON FAIT
+- exercices R -> NON FAIT
+
+
+# Sécurité :
+
+- connexion au LDAP, base exterieure, ... 
+- sécurisation coté client & serveur 
+- vision sous-ensemble / totalité
+- administrateur, enseignant, étudiant, invité
+
+# Interface
+
+- bootstrap & angularjs
+
+# Chargement/annotation
+
+- pdf -> html (finalement)
+- annotation texte & image + commentaire
+- envisageable à peu de frais : 
+    - image png
+    - video
+    - texte tapé en markdown, html...(cours ?)
+
+# QCM 
+
+- QCM avec/sans documents, multi documents
+- avec /sans aide/commentaires des annotation
+- notation
+- avec ou sans limite de temps (global ou par question)
+
+
+
+
+* PUCES distinctes menu
+* bloquant (0pointé indispensable/interdit), pondération
+* cocher les réponses considérées correctes
+* ELEMENTS : 
+    - FLASH, clignotant (CSS)
+* onthologie = tag à plusieurs niveaux pour un document
+study-design
+
+
+# ANNOTORIOUS :
+
+- détournement des 2 boutons en + & -
+- il faut ajouter la prop "zone" à chaque annot
+- quand + cliqué -> déclenche fonction qui 
+    - envoie à parent la valeur
+    - supprime toutes les annotorious qui ont l'ID, et les recrée avec la couleur verte
+    - ajoute la classe à toutes les annotator qui ont l'ID, pour les rendre verts
+- pour creer le build : modifier standalone : debug = false ; java -jar plovr/plovr.jar build  standalone.json > ~/test.js
+- le résultat : ajouter +200 aux 2 endroits ou "width:f.width,height:f.height" est présent + enlever "Q(this.element,"display","inline-block")" qui se trouve avant le seul "inline-block"
+il faut que la version étudiante integre l'"annotatorious modifié" ainsi que le css modifié (avec le pouce levé et baissé)
+- possible de changer la couleur en fonction des annotation text/images
+
+
+
+# NEWS
+
+- modalité non applicable pour les tags.
+- eventuel : limiter le tag à l'ontologie et non aux descendants.
+- 3 niveaux de compétences, 
+- OPO, OBCS & STATO
+- ajouter plusieurs ontologies
+- pouvoir annoter les ontologies (fr....)
