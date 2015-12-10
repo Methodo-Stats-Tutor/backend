@@ -137,7 +137,6 @@ public class IdentRestService {
         Gson gson = new Gson();
 
         try {
-            log.error( credentials );
             JsonElement je = gson.fromJson( credentials, JsonElement.class );
             JsonObject jo = je.getAsJsonObject();
 
@@ -152,6 +151,8 @@ public class IdentRestService {
 
             // Get the protected web page:
             webResource = client.resource( "http://localhost:8081/mst/rest/ident/admin" );
+        
+
             ClientResponse response = webResource.get( ClientResponse.class );
             if ( response.getStatus() != 200 ) {// pas admin...
                 webResource = client.resource( "http://localhost:8081/mst/rest/ident/teacher" );
@@ -194,6 +195,7 @@ public class IdentRestService {
 //            dataset.addProperty( "userLName", usr.getNom() );
 //            dataset.addProperty( "userD8Add", MstUtils.quoteDate( usr.getD8Add() ) );
 //            dataset.addProperty( "userRole", type.toString() );
+            log.error( credentials );
             return Response.status( 200 ).entity( jos.toString() )
                     .header( "Access-Control-Allow-Origin", "*" ).build();
         } catch ( Exception e ) {

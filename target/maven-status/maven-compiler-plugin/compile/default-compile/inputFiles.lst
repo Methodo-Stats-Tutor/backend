@@ -11,6 +11,7 @@
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Customer.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/JsonBeans.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/PubliZone.java
+/home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/ReasonerService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Choice.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Admin.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Exercice.java
@@ -28,6 +29,7 @@
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/servlets/VoirTuples.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Book.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/webservices/CourseMaterialRestService.java
+/home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/ReasonerStudentClassificationService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/BookI.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/PublicationAnnot.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/servlets/ConnectTDB.java

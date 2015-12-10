@@ -31,14 +31,15 @@ import com.hp.hpl.jena.util.FileManager;
 import com.urcpo.mst.beans.Publications;
 import com.urcpo.mst.beans.Qcms;
 import com.urcpo.mst.utils.MstUtils;
+
 /**
  * Servlet implementation class connectTDB
  */
 @WebServlet( value = "/loadonto", loadOnStartup = 1 )
 public class LoadOnto extends HttpServlet {
     private static final long   serialVersionUID = 1L;
-    public static Model      ontologie;
-    public static Dataset dataset;
+    public static Model         ontologie;
+    public static Dataset       dataset;
     private static final Logger logger           = Logger.getLogger( LoadOnto.class );
 
     /**
@@ -56,73 +57,63 @@ public class LoadOnto extends HttpServlet {
     public void init() throws ServletException {
         logger.debug( "initialisation" );
         FileOutputStream out = null;
-        try {
-            out = new FileOutputStream( "/tmp/test" );
-        } catch ( FileNotFoundException e1 ) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+
         ontologie = ModelFactory.createDefaultModel();
         Properties prop = MstUtils.readMstConfig();
         String fich = prop.getProperty( "onto.directory" ) + "/stato.xrdf";
-      //  dataset = TDBFactory.createDataset( fich );
-        logger.info("Query Result Sheet");
-         ontologie = FileManager.get().loadModel(fich);
-     //   logger.info("Query Result Sheet");
-//        InputStream in = null;
-//        try {
-//            in = new FileInputStream( fich );
-//        } catch ( FileNotFoundException e ) {
-//            
-//            logger.error( "Problème récupération du fichier : " + fich );
-//            e.printStackTrace();
-//
-//        } // or any windows path
-//        ontologie.read( in, null );
-        String queryString ="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
-                 "select ?uri  \n"+
-                "where { \n"+
-                "?uri  rdfs:subClassOf ?test \n"+
-                           "} \n ";
-                
-               logger.debug ( getSparqlResultAsJson(queryString) );
-               // ResultSetFormatter.out(out, resultSet, query); 
-                try {
-                    out.close();
-                } catch ( IOException e1 ) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            
+        // dataset = TDBFactory.createDataset( fich );
+        logger.info( "Query Result Sheet" );
+        ontologie = FileManager.get().loadModel( fich );
+        // logger.info("Query Result Sheet");
+        // InputStream in = null;
+        // try {
+        // in = new FileInputStream( fich );
+        // } catch ( FileNotFoundException e ) {
+        //
+        // logger.error( "Problème récupération du fichier : " + fich );
+        // e.printStackTrace();
+        //
+        // } // or any windows path
+        // ontologie.read( in, null );
+        // String queryString
+        // ="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
+        // "select ?uri  \n"+
+        // "where { \n"+
+        // "?uri  rdfs:subClassOf ?test \n"+
+        // "} \n ";
+
+        // logger.debug ( getSparqlResultAsJson(queryString) );
+        // ResultSetFormatter.out(out, resultSet, query);
+
         logger.info( "Fin initialisation" );
         logger.info( "Début création publications" );
-Publications publis = null;
-Qcms qcms = null;
+        Publications publis = null;
+        Qcms qcms = null;
 
-            EntityManagerImpl em = (EntityManagerImpl) EntityManagerFactory.getEntityManager();
+        EntityManagerImpl em = (EntityManagerImpl) EntityManagerFactory.getEntityManager();
 
-            ConnectTDB.dataset.begin( ReadWrite.WRITE );
-            try {
-                publis = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "publications", Publications.class );
-                qcms = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "qcms", Qcms.class );
+        ConnectTDB.dataset.begin( ReadWrite.WRITE );
+        try {
+            publis = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "publications", Publications.class );
+            qcms = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "qcms", Qcms.class );
 
-                ConnectTDB.dataset.commit();
-            } catch ( MissingAnnotation e ) {
-            } finally {
-                ConnectTDB.dataset.end();
-            }
+            ConnectTDB.dataset.commit();
+        } catch ( MissingAnnotation e ) {
+        } finally {
+            ConnectTDB.dataset.end();
+        }
     }
-    
+
     public static String getSparqlResultAsJson( String sparqlQuery ) {
-        logger.debug(String.format( "REQUETE SPARQL : %s", sparqlQuery ));
+        logger.debug( String.format( "REQUETE SPARQL : %s", sparqlQuery ) );
         ResultSet results = null;
         QueryExecution qexec = null;
-      //  Dataset dt = ontologie.g
-    //    dataset.begin( ReadWrite.READ );
+        // Dataset dt = ontologie.g
+        // dataset.begin( ReadWrite.READ );
 
         try {
             Query query = QueryFactory.create( sparqlQuery );
-            
+
             qexec = QueryExecutionFactory.create( query, ontologie );
             results = qexec.execSelect();
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -133,13 +124,15 @@ Qcms qcms = null;
             logger.error( e.getMessage() );
             return null;
         } finally {
-           
-         //   dataset.end();
+
+            // dataset.end();
         }
     }
+
     public void destroy() {
-       ontologie.close();
-      }
+        ontologie.close();
+    }
+
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
