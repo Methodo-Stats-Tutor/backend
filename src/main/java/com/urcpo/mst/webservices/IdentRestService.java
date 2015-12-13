@@ -1,5 +1,7 @@
 package com.urcpo.mst.webservices;
 
+import java.util.Properties;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
@@ -17,6 +19,7 @@ import org.xenei.jena.entities.MissingAnnotation;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -137,6 +140,10 @@ public class IdentRestService {
         Gson gson = new Gson();
 
         try {
+            Properties prop = MstUtils.readMstConfig();
+            String appServ = String.format( "http://%s:%s", prop.getProperty( "appli.host" ),
+                    prop.getProperty( "appli.port" ));
+            log.error("serv appli"+ appServ );
             JsonElement je = gson.fromJson( credentials, JsonElement.class );
             JsonObject jo = je.getAsJsonObject();
 
@@ -145,23 +152,23 @@ public class IdentRestService {
 
             Client client = Client.create();
             WebResource webResource = client
-                    .resource( "http://localhost:8081/mst/rest/ident/admin" );
+                    .resource( appServ + "/mst/rest/ident/admin" );
             client.addFilter( new HTTPBasicAuthFilter( username, password ) );
             UserEnum type;
-
+        
             // Get the protected web page:
-            webResource = client.resource( "http://localhost:8081/mst/rest/ident/admin" );
+            webResource = client.resource( appServ+"/mst/rest/ident/admin" );
         
 
             ClientResponse response = webResource.get( ClientResponse.class );
             if ( response.getStatus() != 200 ) {// pas admin...
-                webResource = client.resource( "http://localhost:8081/mst/rest/ident/teacher" );
+                webResource = client.resource( appServ+"/mst/rest/ident/teacher" );
                 response = webResource.get( ClientResponse.class );
                 if ( response.getStatus() != 200 ) {// pas teacher...
-                    webResource = client.resource( "http://localhost:8081/mst/rest/ident/student" );
+                    webResource = client.resource( appServ+"/mst/rest/ident/student" );
                     response = webResource.get( ClientResponse.class );
                     if ( response.getStatus() != 200 ) {// pas student...
-                        webResource = client.resource( "http://localhost:8081/mst/rest/ident/guest" );
+                        webResource = client.resource( appServ+"/mst/rest/ident/guest" );
                         response = webResource.get( ClientResponse.class );
                         if ( response.getStatus() != 200 ) {// pas teacher...
                             return Response.status( 403 ).entity( response.getStatus() )
