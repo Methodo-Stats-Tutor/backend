@@ -17,6 +17,7 @@ import org.xenei.jena.entities.EntityManagerFactory;
 import org.xenei.jena.entities.MissingAnnotation;
 import org.xenei.jena.entities.impl.EntityManagerImpl;
 
+import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -49,6 +50,16 @@ public class LoadOnto extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    private void mergeOntos(){
+        Properties prop = MstUtils.readMstConfig();
+        String[] ontos = prop.getProperty( "onto.ext" ).split( ";" ) ;
+        ontologie = ModelFactory.createDefaultModel();
+        for(String onto:ontos){
+            logger.error("TOTO"+onto);
+            String fich =  prop.getProperty( "onto.directory" ) + onto;
+           ontologie.add( FileManager.get().loadModel( fich ));
+        }
+    }
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,13 +68,11 @@ public class LoadOnto extends HttpServlet {
     public void init() throws ServletException {
         logger.debug( "initialisation" );
         FileOutputStream out = null;
-
-        ontologie = ModelFactory.createDefaultModel();
-        Properties prop = MstUtils.readMstConfig();
-        String fich = prop.getProperty( "onto.directory" ) + "/stato.xrdf";
+        mergeOntos();
         // dataset = TDBFactory.createDataset( fich );
         logger.info( "Query Result Sheet" );
-        ontologie = FileManager.get().loadModel( fich );
+
+        
         // logger.info("Query Result Sheet");
         // InputStream in = null;
         // try {

@@ -114,10 +114,10 @@ public class TupleService {
                     "SELECT DISTINCT ?id ?label ?hasChildren\n" + 
                     "WHERE {\n" + 
                     "{\n" + 
-                    "{ ?s rdfs:label ?o } UNION { ?s obo:IAO_0000115 ?o }.\n" + 
+                    "{ ?s rdfs:label ?o } UNION { ?s obo:IAO_0000115 ?o } UNION { ?s rdfs:comment ?o }.\n" + 
                     "FILTER regex(?o, \""+pattern+"\", \"i\")\n" + 
                     "}\n" + 
-                    "?id rdfs:label ?label.\n" + 
+                    "{?id rdfs:label ?label} UNION  { ?id obo:IAO_0000115 ?label } UNION { ?id rdfs:comment ?label }.\n" + 
                     "FILTER (?id = ?s)\n" + 
                     "{\n" + 
                     "SELECT ?label ?s  ?hasChildren\n" + 
