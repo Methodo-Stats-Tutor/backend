@@ -41,10 +41,10 @@ public class QcmService {
         this.json = json;
         Qcm qcm = null;
         Gson gson = new Gson();
-
+String qcmUid = MstUtils.uid();
         try {
             ConnectTDB.dataset.begin( ReadWrite.WRITE );
-            qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), MstUtils.uid(), Qcm.class );
+            qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),qcmUid, Qcm.class );
             JsonElement je = gson.fromJson( json, JsonElement.class );
             JsonObject jo = je.getAsJsonObject();
             log.error( "ok0" );
@@ -162,11 +162,13 @@ public class QcmService {
             }
             qcm.setJson( json );
             qcm.setD8Last( MstUtils.now() );
+    
             MstUtils.validatePojo( qcm );
 
             ConnectTDB.dataset.commit();
             // FIN AJOUT PUBLI
-            return qcm;
+            
+          
         } catch ( Exception e )
         {
             log.error( json );
@@ -174,8 +176,32 @@ public class QcmService {
         } finally {
             ConnectTDB.dataset.end();
         }
+      //les notions en jeux
+        
+        ReasonerQcmMaitriseNotion rq = new ReasonerQcmMaitriseNotion( qcmUid );
+        ConnectTDB.dataset.begin( ReadWrite.WRITE );
+        qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),qcmUid, Qcm.class );
+        int i = 0;
+        while(i< rq.getGiveNotion().size()){
+        qcm.addGiveNotion( rq.getGiveNotion().get( i ) );
+        i++;
+        }
+         i = 0;
+        while(i< rq.getNeedNotion().size()){
+            qcm.addNeedNotion( rq.getNeedNotion().get( i ) );
+            i++;
+        }
+
+        ConnectTDB.dataset.commit();
+        ConnectTDB.dataset.end();
+
+
+        //fin les notions en jeux 
+        
+        return qcm;
 
     }
+    
 
     // Save, not first TIME
     public Qcm updateQcm( JsonObject json, String qcmUid
@@ -400,6 +426,11 @@ public class QcmService {
         updateQcmTry( uriQcm, joa.toString() );
 
         return last.toString();
-
+    }
+    
+    public String getQcmNotion(String qcmUid){
+        ReasonerQcmMaitriseNotion rq = new ReasonerQcmMaitriseNotion( qcmUid );
+        String str = rq.getQcmNotion();
+        return str;
     }
 }

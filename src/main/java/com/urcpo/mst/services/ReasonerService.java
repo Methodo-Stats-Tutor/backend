@@ -61,7 +61,7 @@ public abstract class ReasonerService {
 
     public abstract void reasonOverSubModel();
 
-    public abstract ResultSet GetResults();
+    public abstract void processResults();
 
     protected void mergeModelsInSubModel( Model... mods ) {
         subModel = ModelFactory.createDefaultModel().read( "/app/mst/ontologies/int/mst.owl" );

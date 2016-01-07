@@ -52,7 +52,7 @@ public class LoadOnto extends HttpServlet {
     }
     private void mergeOntos(){
         Properties prop = MstUtils.readMstConfig();
-        String[] ontos = prop.getProperty( "onto.ext" ).split( ";" ) ;
+        String[] ontos = prop.getProperty( "onto.int" ).split( ";" ) ;
         ontologie = ModelFactory.createDefaultModel();
         for(String onto:ontos){
             logger.error("TOTO"+onto);

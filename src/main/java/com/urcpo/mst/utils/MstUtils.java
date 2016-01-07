@@ -1,5 +1,6 @@
 package com.urcpo.mst.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,6 +31,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ReadWrite;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.urcpo.mst.beans.JsonBeans;
 import com.urcpo.mst.beans.Publication;
 import com.urcpo.mst.services.CourseMaterialService;
@@ -38,20 +46,20 @@ import com.urcpo.mst.servlets.ConnectTDB;
 public class MstUtils {
     private static final Logger log            = Logger.getLogger( MstUtils.class );
 
-    public static final String  REP_FILES    = "/app/mst/files/";
+    public static final String  REP_FILES      = "/app/mst/files/";
     public static final String  REP_SAVE_FILE  = "mst_files/";
     public static final String  REP_SAVE_PUBLI = "publi/";
 
-    public static String formatLog(Object e) {
-        
-          String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
-          String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-          String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-          int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+    public static String formatLog( Object e ) {
 
-          return String.format("%s.%s() : %s, %s", className,  methodName,  lineNumber, e);
-        }
-    
+        String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        String className = fullClassName.substring( fullClassName.lastIndexOf( "." ) + 1 );
+        String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+
+        return String.format( "%s.%s() : %s, %s", className, methodName, lineNumber, e );
+    }
+
     public static String uid() {
         return "id" + UUID.randomUUID().toString();
     }
@@ -72,7 +80,7 @@ public class MstUtils {
 
         if ( constraintViolations.size() > 0 ) {
             for ( ConstraintViolation<JsonBeans> contraintes : constraintViolations ) {
-                dataset.addProperty( contraintes.getPropertyPath().toString(), 
+                dataset.addProperty( contraintes.getPropertyPath().toString(),
                         contraintes.getMessage() );
             }
             log.error( dataset.toString() );
@@ -185,24 +193,35 @@ public class MstUtils {
         byte[] encoded = Files.readAllBytes( Paths.get( path ) );
         return new String( encoded, encoding );
     }
-    
+
     public static Properties readMstConfig()
     {
         Properties prop = new Properties();
         InputStream input = null;
         try {
-            input = new FileInputStream("/app/mst/config/mst.properties");
+            input = new FileInputStream( "/app/mst/config/mst.properties" );
         } catch ( FileNotFoundException e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         try {
-            prop.load(input);
+            prop.load( input );
         } catch ( IOException e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return prop;
+    }
+
+    public static String getSparqlResultsetAsJson( ResultSet results ) {
+        try {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            ResultSetFormatter.outputAsJSON( outStream, results );
+            return outStream.toString();
+        } catch ( Exception e ) {
+            return null;
+        } finally {
+        }
     }
 }

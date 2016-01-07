@@ -1,6 +1,7 @@
 package com.urcpo.mst.services;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
@@ -192,7 +193,6 @@ public class CourseMaterialService {
         } finally {
             ConnectTDB.dataset.end();
         }
-
     }
 
     protected PublicationAnnot createPubliAnnot(String uidCm, Model model, String nom,
@@ -218,7 +218,12 @@ public class CourseMaterialService {
                     log.error( "OK" + tags.toString() );
                     uid = MstUtils.uid();
                     Tag tag = ConnectTDB.readWrite( model, uid, Tag.class );
+                    String uidUriTag = MstUtils.uid();
                     tag.setUri( java.net.URI.create(tags.getKey().toString() ));
+              // add type...
+      //        Resource instance1 =   model.getResource( "http://methodo-stats-tutor.com#" + uidUriTag );
+       //       instance1.addProperty(RDF.type, tags.getKey().toString());
+              // fin add type
                     tag.setAccuracy( tags.getValue().getAsJsonObject().get("accuracy").getAsInt() );
                     pz.addHasTag(tag);
                 }

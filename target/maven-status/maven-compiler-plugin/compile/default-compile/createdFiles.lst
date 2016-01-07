@@ -25,7 +25,7 @@ com/urcpo/mst/services/TupleService.class
 com/urcpo/mst/beans/PublicationAnnot.class
 com/urcpo/mst/beans/Customer.class
 com/urcpo/mst/services/ReasonerStudentClassificationService.class
-com/urcpo/mst/servlets/VoirTuples.class
+com/urcpo/mst/services/ReasonerQcmMaitriseNotion.class
 com/urcpo/mst/servlets/LoadOnto.class
 com/urcpo/mst/servlets/ConnectTDB.class
 com/urcpo/mst/beans/PubliZone.class
@@ -36,6 +36,7 @@ com/urcpo/mst/beans/Publications.class
 com/urcpo/mst/beans/Guest.class
 com/urcpo/mst/beans/Picture.class
 com/urcpo/mst/beans/Book.class
+com/urcpo/mst/beans/ExternalConcept.class
 com/urcpo/mst/beans/CourseMaterial.class
 com/urcpo/mst/beans/User.class
 com/urcpo/mst/beans/QcmTry.class

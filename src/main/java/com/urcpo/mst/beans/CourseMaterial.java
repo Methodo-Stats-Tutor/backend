@@ -35,7 +35,7 @@ public abstract class CourseMaterial implements JsonBeans {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( namespace = "http://foaf.com#" )
+    @Predicate( impl = true )
     public void setD8Add( XSDDateTime ens ) {
         throw new EntityManagerRequiredException();
     }
@@ -47,6 +47,40 @@ public abstract class CourseMaterial implements JsonBeans {
 
     @Predicate( impl = true )
     public String getAuthor() {
+        throw new EntityManagerRequiredException();
+
+    }
+
+    @Predicate( impl = true, name="needNotion" )
+    public ArrayList<java.net.URI> getNeedNotion() {
+        throw new EntityManagerRequiredException();
+
+    }
+    
+    @Predicate( impl = true )
+    public void addNeedNotion(java.net.URI uri) {
+        throw new EntityManagerRequiredException();
+
+    }
+    
+    @Predicate( impl = true, name="needNotion" )
+    public void removeNeedNotion(java.net.URI uri) {
+        throw new EntityManagerRequiredException();
+
+    }
+    @Predicate( impl = true, name="giveNotion" )
+    public ArrayList<java.net.URI> getGiveNotion() {
+        throw new EntityManagerRequiredException();
+
+    }
+    @Predicate( impl = true )
+    public void addGiveNotion(java.net.URI uri) {
+        throw new EntityManagerRequiredException();
+
+    }
+    
+    @Predicate( impl = true, name="giveNotion" )
+    public void removeGiveNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }

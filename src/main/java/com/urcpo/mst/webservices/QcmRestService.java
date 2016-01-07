@@ -83,7 +83,23 @@ public class QcmRestService {
             return Response.status( 500 ).header( "Access-Control-Allow-Origin", "*" ).build();
         }
     }
-
+    
+    @GET
+    @Path( "/qcm/getQcmNotion/{uid}" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getQcmNotion( @PathParam( "uid" ) String uid ) {
+        QcmService qcmService = new QcmService();
+        try {
+            return Response.status( 200 ).entity( qcmService.getQcmNotion( uid ) )
+                    .header( "Access-Control-Allow-Origin", "*" )
+                    .build();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            log.error( e );
+            return Response.status( 500 ).build();
+        }
+    }
+    
     @GET
     @Path( "/qcms/{userUid}" )
     @Produces( MediaType.APPLICATION_JSON )
@@ -131,6 +147,9 @@ public class QcmRestService {
             return Response.status( 500 ).build();
         }
     }
+    
+
+    
     @GET
     @Path( "/qcmtrys/{usrUri}" )
     @Produces( MediaType.APPLICATION_JSON )

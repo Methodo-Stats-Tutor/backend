@@ -61,7 +61,9 @@ public class ReasonerStudentClassificationService extends ReasonerService {
 
     public ReasonerStudentClassificationService( String student ) {
         this.student = student;
-
+        createSubModel();
+        reasonOverSubModel();
+        processResults();
     }
 
     @Override
@@ -129,9 +131,8 @@ log.error( queryStudent );
     }
 
     @Override
-    public ResultSet GetResults() {
-        createSubModel();
-        reasonOverSubModel();
+    public void processResults() {
+ 
         String queryBegin =
                 "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
                         "PREFIX mst: <http://methodo-stats-tutor.com#>" +
@@ -154,7 +155,7 @@ log.error( queryStudent );
         Query query2 = QueryFactory.create( queryStr2 );
         ResultSet results = SparqlDLExecutionFactory.create( query2, ontModel ).execSelect();
         logQueryResult( results );
-        return results;
+  
     }
 
 }

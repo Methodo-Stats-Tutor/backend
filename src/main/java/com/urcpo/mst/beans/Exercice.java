@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 
 
-@Subject( namespace="http://methodo-stats-tutor.com#", types={"http://example.com#Exercice"} )
+@Subject( namespace="http://methodo-stats-tutor.com#", types={"http://methodo-stats-tutor.com#Exercice"} )
 public abstract class Exercice extends CourseMaterial {
     @Override
     @Predicate( impl = true)
@@ -40,7 +40,7 @@ public abstract class Exercice extends CourseMaterial {
     public XSDDateTime getD8Add() {
         throw new EntityManagerRequiredException();
     }
-
+    
 
 
 

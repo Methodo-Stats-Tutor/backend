@@ -73,3 +73,17 @@ il faut que la version étudiante integre l'"annotatorious modifié" ainsi que l
 - OPO, OBCS & STATO
 - ajouter plusieurs ontologies
 - pouvoir annoter les ontologies (fr....)
+
+
+# NEWS 2
+
+- fournir à PH les 2 arbo de stato & obo
+- un exo a :
+  - concept prérequis (les pères de tous les concepts de questions)
+  - concept validés (les concepts validés)
+- MST propose à l'enseignant les concepts validés/prérequis
+- on a une pile d'exercices à proposer à l'étudiant, ordonnée
+- on propose un exercice quand il a validé les concepts
+- on peut voir l'espace des concepts validés
+- selon la promotion, des pants de l'onto sont visibles ou non.
+- selon que l'élève est bon ou non, des pants de l'onto sont visible ou non (débloqués)
