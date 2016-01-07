@@ -36,24 +36,58 @@ public class QcmService {
 
     }
 
-    // QUAND SAVE & firsttime, OU SAVEFINAL
     public Qcm createQcm( String json ) throws Exception {
         this.json = json;
         Qcm qcm = null;
         Gson gson = new Gson();
-String qcmUid = MstUtils.uid();
+        JsonElement je = gson.fromJson( json, JsonElement.class );
+        JsonObject jo = je.getAsJsonObject();
+        String qcmUid;
+        Boolean firstime = false;
+
         try {
             ConnectTDB.dataset.begin( ReadWrite.WRITE );
-            qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),qcmUid, Qcm.class );
-            JsonElement je = gson.fromJson( json, JsonElement.class );
-            JsonObject jo = je.getAsJsonObject();
-            log.error( "ok0" );
+
+            qcmUid = MstUtils.uid();
+
+            qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), qcmUid, Qcm.class );
             qcm.setTeacher( ConnectTDB.readWrite(
                     ConnectTDB.dataset.getDefaultModel(),
                     jo.get( "userUid" ).getAsString(), Teacher.class ) );
+            qcm.setD8Add( MstUtils.now() );
+            ConnectTDB.dataset.commit();
+
+        } catch ( Exception e )
+        {
+            log.error( json );
+            throw new Exception( e.getMessage() );
+        } finally {
+            ConnectTDB.dataset.end();
+        }
+        return qcm;
+    }
+
+    // QUAND SAVE & firsttime, OU SAVEFINAL
+    public Qcm saveQcm( String json ) throws Exception {
+        this.json = json;
+        Qcm qcm = null;
+        Gson gson = new Gson();
+        JsonElement je = gson.fromJson( json, JsonElement.class );
+        JsonObject jo = je.getAsJsonObject();
+        String qcmUid;
+        try {
+            ConnectTDB.dataset.begin( ReadWrite.WRITE );
+
+            qcmUid = jo.get( "uid" ).getAsString();
+
+            qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), qcmUid, Qcm.class );
+            // qcm.setTeacher( ConnectTDB.readWrite(
+            // ConnectTDB.dataset.getDefaultModel(),
+            // jo.get( "userUid" ).getAsString(), Teacher.class ) );
+            // qcm.setD8Add( MstUtils.now() );
             qcm.setName( jo.get( "name" ).getAsString() );
             qcm.setDifficulty( jo.get( "difficulty" ).getAsInt() );
-            qcm.setD8Add( MstUtils.now() );
+
             qcm.setFinished( jo.get( "finished" ).getAsBoolean() );
             PublicationAnnot pa;
             for ( int j = 0; j < jo.get( "courseMaterialUid" ).getAsJsonArray().size(); j++ ) {
@@ -61,7 +95,6 @@ String qcmUid = MstUtils.uid();
                         jo.get( "courseMaterialUid" ).getAsJsonArray().get( j ).getAsString(), PublicationAnnot.class );
                 qcm.addRefersToPubliAnnot( pa );
             }
-            log.error( "ok1" );
 
             // QUESTION
             Question quest;
@@ -69,7 +102,6 @@ String qcmUid = MstUtils.uid();
             ChoiceZone cz;
             ChoiceText ct;
             JsonObject jq = jo.get( "questions" ).getAsJsonObject();
-            log.error( "ok2" );
 
             for ( Map.Entry<String, JsonElement> entry : jq.entrySet() ) {
                 rank = Integer.parseInt( entry.getKey() );
@@ -80,7 +112,6 @@ String qcmUid = MstUtils.uid();
                 JsonObject jq2 = entry.getValue().getAsJsonObject();
                 quest.setRank( jq2.get( "rank" ).getAsInt() );
                 quest.setStatement( jq2.get( "statement" ).getAsString() );
-                log.error( "ok3" );
 
                 quest.setDifficulty( jq2.get( "difficulty" ).getAsInt() );
                 if ( jq2.get( "timelimit" ) != null )
@@ -88,52 +119,41 @@ String qcmUid = MstUtils.uid();
                 // CHOICEZONE
                 String czUid;
                 JsonObject jqczInfo;
-                log.error( "ok4" );
 
                 JsonObject jqcz = jq2.get( "choicezone" ).getAsJsonObject();
-                log.error( jqcz.toString() );
-                //if(!jqcz.toString().equals( "{}" ))
+                // if(!jqcz.toString().equals( "{}" ))
                 for ( Map.Entry<String, JsonElement> entry2 : jqcz.entrySet() ) {
-                    log.error( "ok41" );
                     czUid = entry2.getKey();
                     jqczInfo = entry2.getValue().getAsJsonObject();
-                   
+
                     cz = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),
                             MstUtils.uid(), ChoiceZone.class );
                     quest.addHasChoiceZone( cz );
-                    log.error( "ok42" );
-                    //cz.setValue( jqczInfo.get( "value" ).getAsBoolean() );
+                    // cz.setValue( jqczInfo.get( "value" ).getAsBoolean() );
                     if ( jqczInfo.get( "value" ) == null ) {
                         cz.setValue( false );
                     } else {
                         cz.setValue( jqczInfo.get( "value" ).getAsBoolean() );
                     }
-                    log.error( "ok43" );
                     if ( jqczInfo.get( "gameOver" ) == null ) {
                         cz.setGameOver( false );
                     } else {
                         cz.setGameOver( jqczInfo.get( "gameOver" ).getAsBoolean() );
                     }
-                    log.error( "ok44" );
                     if ( jqczInfo.get( "correction" ) != null )
                         cz.setCorrection( jqczInfo.get( "correction" ).getAsString() );
-                    log.error( "ok45" );
                     if ( jqczInfo.get( "help" ) != null )
                         cz.setHelp( jqczInfo.get( "help" ).getAsString() );
-                    log.error( "ok46" );
                     cz.setHasPubliZone( ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),
                             czUid, PubliZone.class ) );
-                    log.error( "ok47" );
-
                 }
 
                 // CHOICETEXT
                 String ctUid;
                 JsonObject jqctInfo;
-                log.error( "ok5" );
 
                 JsonObject jqct = jq2.get( "choicetext" ).getAsJsonObject();
-              //  if(!jqct.toString().equals( "{}" ))
+                // if(!jqct.toString().equals( "{}" ))
                 for ( Map.Entry<String, JsonElement> entry2 : jqct.entrySet() ) {
                     ctUid = entry2.getKey();
                     jqctInfo = entry2.getValue().getAsJsonObject();
@@ -141,7 +161,6 @@ String qcmUid = MstUtils.uid();
                             MstUtils.uid(), ChoiceText.class );
                     quest.addHasChoiceText( ct );
                     // ct.setId( Integer.parseInt( ctUid ) );
-                    log.error( "ok6" );
 
                     if ( jqctInfo.get( "value" ) == null ) {
                         ct.setValue( false );
@@ -162,13 +181,12 @@ String qcmUid = MstUtils.uid();
             }
             qcm.setJson( json );
             qcm.setD8Last( MstUtils.now() );
-    
+
             MstUtils.validatePojo( qcm );
 
             ConnectTDB.dataset.commit();
             // FIN AJOUT PUBLI
-            
-          
+
         } catch ( Exception e )
         {
             log.error( json );
@@ -176,52 +194,55 @@ String qcmUid = MstUtils.uid();
         } finally {
             ConnectTDB.dataset.end();
         }
-      //les notions en jeux
-        
-        ReasonerQcmMaitriseNotion rq = new ReasonerQcmMaitriseNotion( qcmUid );
-        ConnectTDB.dataset.begin( ReadWrite.WRITE );
-        qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(),qcmUid, Qcm.class );
-        int i = 0;
-        while(i< rq.getGiveNotion().size()){
-        qcm.addGiveNotion( rq.getGiveNotion().get( i ) );
-        i++;
-        }
-         i = 0;
-        while(i< rq.getNeedNotion().size()){
-            qcm.addNeedNotion( rq.getNeedNotion().get( i ) );
-            i++;
-        }
 
-        ConnectTDB.dataset.commit();
-        ConnectTDB.dataset.end();
-
-
-        //fin les notions en jeux 
-        
         return qcm;
 
     }
-    
+
+    public Qcm saveQcmNotion( String json, String qcmUid ) throws Exception {
+        Qcm qcm = null;
+        Gson gson = new Gson();
+        JsonElement je = gson.fromJson( json, JsonElement.class );
+        JsonObject jo = je.getAsJsonObject();
+        // les notions en jeux
+        try {
+            ConnectTDB.dataset.begin( ReadWrite.WRITE );
+            qcm = ConnectTDB.readWrite(
+                    ConnectTDB.dataset.getDefaultModel(), qcmUid, Qcm.class );
+            for ( int j = 0; j < jo.get( "traite" ).getAsJsonArray().size(); j++ ) {
+                qcm.addTraiteNotion( java.net.URI.create( jo.get( "traite" ).getAsJsonArray().get( j ).getAsString() ) );
+            }
+            for ( int j = 0; j < jo.get( "give" ).getAsJsonArray().size(); j++ ) {
+                qcm.addGiveNotion( java.net.URI.create( jo.get( "give" ).getAsJsonArray().get( j ).getAsString() ) );
+            }
+            for ( int j = 0; j < jo.get( "need" ).getAsJsonArray().size(); j++ ) {
+                qcm.addNeedNotion( java.net.URI.create( jo.get( "need" ).getAsJsonArray().get( j ).getAsString() ) );
+            }
+            ConnectTDB.dataset.commit();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            ConnectTDB.dataset.end();
+        }
+        // fin les notions en jeux
+
+        return qcm;
+    }
 
     // Save, not first TIME
     public Qcm updateQcm( JsonObject json, String qcmUid
             ) throws Exception {
         Qcm qcm = null;
         ConnectTDB.dataset.begin( ReadWrite.WRITE );
-        log.error( "b2" );
         try {
-            log.error( "b3" );
-
             qcm = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), qcmUid, Qcm.class );
             log.error( json.toString() );
-
             qcm.setName( json.get( "name" ).getAsString() );
-            log.error( "b4" );
             qcm.setDifficulty( json.get( "difficulty" ).getAsInt() );
             qcm.setD8Last( MstUtils.now() );
             qcm.setJson( json.toString() );
             qcm.setFinished( json.get( "finished" ).getAsBoolean() );
-            log.error( "b5" );
             MstUtils.validatePojo( qcm );
 
             ConnectTDB.dataset.commit();
@@ -265,7 +286,7 @@ String qcmUid = MstUtils.uid();
                 "                  OPTIONAL{?qcmtry mst:refersQcm ?qcm .\n" +
                 "                  ?qcmtry mst:finished false .\n" +
                 "                ?qcmtry mst:json ?json .\n" +
-                "                 ?qcmtry mst:user mst:"+ userUid +" }\n" +
+                "                 ?qcmtry mst:user mst:" + userUid + " }\n" +
                 "                 }";
         return ConnectTDB.getSparqlResultAsJson( sparqlQueryString );
     }
@@ -427,8 +448,9 @@ String qcmUid = MstUtils.uid();
 
         return last.toString();
     }
-    
-    public String getQcmNotion(String qcmUid){
+
+    // déduit les notions manipulées par ce qcm
+    public String getQcmNotion( String qcmUid ) {
         ReasonerQcmMaitriseNotion rq = new ReasonerQcmMaitriseNotion( qcmUid );
         String str = rq.getQcmNotion();
         return str;

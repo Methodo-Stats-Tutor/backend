@@ -48,11 +48,41 @@ public class QcmRestService {
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.APPLICATION_JSON )
     public Response createQcm( String json ) {
-        log.error( "ok-1" );
         try {
             QcmService pas = new QcmService();
-
             return Response.status( 200 ).entity( "{\"qcmUid\":\"" + pas.createQcm( json ).getUid() + "\"}" )
+                    .header( "Access-Control-Allow-Origin", "*" ).build();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            log.error( e.getMessage() );
+            return Response.status( 500 ).entity( e.toString() ).build();
+        }
+    }
+    
+    @POST
+    @Path( "/qcm/save" )
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response saveQcm( String json ) {
+        try {
+            QcmService pas = new QcmService();
+            return Response.status( 200 ).entity( "{\"qcmUid\":\"" + pas.saveQcm( json ).getUid() + "\"}" )
+                    .header( "Access-Control-Allow-Origin", "*" ).build();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            log.error( e.getMessage() );
+            return Response.status( 500 ).entity( e.toString() ).build();
+        }
+    }
+    
+    @POST
+    @Path( "/qcm/savenotion/{qcmUid}" )
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response saveQcmNotion( @PathParam( "qcmUid" ) String qcmUid, String json ) {
+        try {
+            QcmService pas = new QcmService();
+            return Response.status( 200 ).entity( "{\"qcmUid\":\"" + pas.saveQcmNotion( json, qcmUid  ).getUid() + "\"}" )
                     .header( "Access-Control-Allow-Origin", "*" ).build();
         } catch ( Exception e ) {
             // TODO Auto-generated catch block
@@ -72,7 +102,6 @@ public class QcmRestService {
             log.error( json );
             JsonElement je = gson.fromJson( json, JsonElement.class );
             JsonObject qcmJson = je.getAsJsonObject();
-            log.error( "b1" );
             Qcm qcm = userService.updateQcm( qcmJson, qcmUid );
             return Response.status( 200 ).entity( "{\"qcmUid\" : \"" + qcm.getUid() + "\"}" )
                     .header( "Access-Control-Allow-Origin", "*" )
@@ -251,7 +280,22 @@ public class QcmRestService {
                 .header( "Access-Control-Allow-Headers", "Content-Type" ).header( "Access-Control-Max-Age", "86400" )
                 .header( "Allow", "GET, HEAD, POST, TRACE, OPTIONS" ).build();
     }
-
+    @OPTIONS
+    @Path( "/qcm/save" )
+    public Response saveOpt() {
+        return Response.ok().header( "Access-Control-Allow-Origin", "*" )
+                .header( "Access-Control-Allow-Methods", "GET, POST" ).header( "AccessControlAllowCredentials", true )
+                .header( "Access-Control-Allow-Headers", "Content-Type" ).header( "Access-Control-Max-Age", "86400" )
+                .header( "Allow", "GET, HEAD, POST, TRACE, OPTIONS" ).build();
+    }
+    @OPTIONS
+    @Path( "/qcm/savenotion/{qcmUid}" )
+    public Response saveQcmNotionOpt() {
+        return Response.ok().header( "Access-Control-Allow-Origin", "*" )
+                .header( "Access-Control-Allow-Methods", "GET, POST" ).header( "AccessControlAllowCredentials", true )
+                .header( "Access-Control-Allow-Headers", "Content-Type" ).header( "Access-Control-Max-Age", "86400" )
+                .header( "Allow", "GET, HEAD, POST, TRACE, OPTIONS" ).build();
+    }
     @OPTIONS
     @Path( "/qcms/{userUid}" )
     public Response myResource23() {

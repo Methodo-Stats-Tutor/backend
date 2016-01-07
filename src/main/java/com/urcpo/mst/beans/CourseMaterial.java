@@ -84,5 +84,21 @@ public abstract class CourseMaterial implements JsonBeans {
         throw new EntityManagerRequiredException();
 
     }
+    @Predicate( impl = true, name="traiteNotion" )
+    public ArrayList<java.net.URI> getTraiteNotion() {
+        throw new EntityManagerRequiredException();
+
+    }
+    @Predicate( impl = true )
+    public void addTraiteNotion(java.net.URI uri) {
+        throw new EntityManagerRequiredException();
+
+    }
+    
+    @Predicate( impl = true, name="traiteNotion" )
+    public void removeTraiteNotion(java.net.URI uri) {
+        throw new EntityManagerRequiredException();
+
+    }
 
 }

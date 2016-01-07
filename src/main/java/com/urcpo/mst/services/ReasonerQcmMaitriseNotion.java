@@ -21,6 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -49,11 +51,13 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.PrintUtil;
@@ -124,14 +128,14 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
     public void reasonOverSubModel() {
 
         ontModel = ModelFactory.createOntologyModel( PelletReasonerFactory.THE_SPEC, subModel );
-         OutputStream outputStream;
-         try {
-         outputStream = new FileOutputStream( "/tmp/testOnt.xml" );
-         ontModel.write( outputStream, "RDF/XML" );
-         } catch ( FileNotFoundException e ) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-         }
+        OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream( "/tmp/testOnt.xml" );
+            ontModel.write( outputStream, "RDF/XML" );
+        } catch ( FileNotFoundException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -160,7 +164,7 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
 
         while ( results.hasNext() ) {
             RDFNode a = results.next().get( "?NOTION" );
-            log.error( "MORT"+ a.asLiteral().getString());
+            log.error( "MORT" + a.asLiteral().getString() );
             giveNotion.add( java.net.URI.create( a.asLiteral().getString() ) );
             needNotion.addAll( getSuperClassFromUri( a.asLiteral().getString() ) );
 
@@ -175,18 +179,41 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
         this.needNotion = needNotion;
         this.giveNotion = giveNotion;
 
+        //ajout des notions au modele 
+        int i = 0;
+        while ( i < needNotion.size() ) {
+            log.error( needNotion.get( i ).toString() );
+            addStatementToOntModel( "needNotion", needNotion.get( i ).toString() );
+            i++;
+        }
+        i = 0;
+        while ( i < giveNotion.size() ) {
+            log.error( giveNotion.get( i ).toString() );
+            addStatementToOntModel( "giveNotion", giveNotion.get( i ).toString() );
+            i++;
+        }
+
     }
-    
-//NEED -> SUPERCLASSE
+
+    private void addStatementToOntModel( String prop, String lit ) {
+        Resource s = ontModel.getIndividual( "http://methodo-stats-tutor.com#" + this.exercise );
+        Property p = ontModel.getDatatypeProperty( "http://methodo-stats-tutor.com#" + prop );
+        Literal o = ontModel.createTypedLiteral( lit, XSDDatatype.XSDanyURI );
+        Statement st = ResourceFactory.createStatement( s, p, o );
+        ontModel.add( st );
+        log.error(st);
+    }
+
+    // NEED -> SUPERCLASSE
     private ArrayList<java.net.URI> getSuperClassFromUri( String uri ) {
         String queryBegin =
-                    "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                            "PREFIX mst: <http://methodo-stats-tutor.com#>\n" +
-                            "PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                            "PREFIX owl:      <http://www.w3.org/2002/07/owl#> \n" +
-                            "PREFIX sparqldl: <http://pellet.owldl.com/ns/sdle#>\n " +
-                            "SELECT DISTINCT ?SUPERCLASS ?LAB ?COM \n" +
-                            "WHERE {";
+                "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                        "PREFIX mst: <http://methodo-stats-tutor.com#>\n" +
+                        "PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                        "PREFIX owl:      <http://www.w3.org/2002/07/owl#> \n" +
+                        "PREFIX sparqldl: <http://pellet.owldl.com/ns/sdle#>\n " +
+                        "SELECT DISTINCT ?SUPERCLASS ?LAB ?COM \n" +
+                        "WHERE {";
         String queryEnd = "}";
 
         // create a query that asks for the color of the wine that
@@ -195,7 +222,7 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
         String queryStr2 =
                 queryBegin +
                         // "?titi  owl:Class ?CLASS ." +
-               //         "?NOTION a ?CLASS ." +
+                        // "?NOTION a ?CLASS ." +
                         "?CLASS sparqldl:directSubClassOf ?SUPERCLASS ." +
                         "OPTIONAL {?SUPERCLASS rdfs:label ?LAB} ." +
                         "OPTIONAL {?SUPERCLASS rdfs:comment ?COM} ." +
@@ -231,9 +258,9 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
                         " BIND(IRI(str(?NOTION)) as ?NOTION_IRI) .\n" +
                         "OPTIONAL { ?NOTION_IRI rdfs:label ?NOTIONLAB } .\n" +
                         "OPTIONAL { ?NOTION_IRI rdfs:comment ?NOTIONCOMM } \n" +
-                         "values ?TYP { 'traite' }\n" +
+                        "values ?TYP { 'traite' }\n" +
                         "FILTER (?EXO = mst:" + this.exercise + ")\n" +
-                         "}\n" +
+                        "}\n" +
                         "UNION \n" +
                         "{?EXO a mst:Qcm .\n" +
                         " ?EXO mst:needNotion ?NOTION .\n" +
@@ -242,7 +269,7 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
                         "OPTIONAL { ?NOTION_IRI rdfs:comment ?NOTIONCOMM } \n" +
                         "values ?TYP { 'need' }\n" +
                         "FILTER (?EXO = mst:" + this.exercise + ")" +
-                         "}" +
+                        "}" +
                         "UNION \n" +
                         "{?EXO a mst:Qcm .\n" +
                         " ?EXO mst:giveNotion ?NOTION .\n" +
@@ -251,7 +278,7 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
                         "OPTIONAL { ?NOTION_IRI rdfs:comment ?NOTIONCOMM } \n" +
                         "values ?TYP { 'give' }\n" +
                         "FILTER (?EXO = mst:" + this.exercise + ")" +
-                         " }" +
+                        " }" +
                         queryEnd;
         log.error( queryStr2 );
         Query query2 = QueryFactory.create( queryStr2 );
