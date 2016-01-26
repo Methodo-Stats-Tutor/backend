@@ -47,6 +47,7 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.urcpo.mst.beans.JsonBeans;
+import com.urcpo.mst.services.ReasonerExerciceToDo;
 import com.urcpo.mst.services.ReasonerQcmMaitriseNotion;
 import com.urcpo.mst.services.ReasonerStudentClassificationService;
 import com.urcpo.mst.utils.MstUtils;
@@ -54,11 +55,12 @@ import com.urcpo.mst.utils.MstUtils;
 /**
  * Servlet implementation class ConnectTDB
  */
-@WebServlet( value = "/start", loadOnStartup = 1 )
+@WebServlet(value = "/start", loadOnStartup = 1)
 public class ConnectTDB extends HttpServlet {
-    private static final long   serialVersionUID = 1L;
-    public static Dataset       dataset;
-    private static final Logger logger           = Logger.getLogger( ConnectTDB.class );
+
+    private static final long serialVersionUID = 1L;
+    public static Dataset dataset;
+    private static final Logger logger = Logger.getLogger(ConnectTDB.class);
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -67,50 +69,50 @@ public class ConnectTDB extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-    public static <T extends JsonBeans> T readWrite( Model model, String id, Class<T> T,
-            final Class<?>... secondaryClasses ) throws MissingAnnotation {
+    
+    public static <T extends JsonBeans> T readWrite(Model model, String id, Class<T> T,
+            final Class<?>... secondaryClasses) throws MissingAnnotation {
         EntityManagerImpl em = (EntityManagerImpl) EntityManagerFactory.getEntityManager();
-        T pa = em.read( em.addInstanceProperties(
-                model.getResource( em.getSubject( T ).namespace() + id ),
-                T ),
-                T );
+        T pa = em.read(em.addInstanceProperties(
+                model.getResource(em.getSubject(T).namespace() + id),
+                T),
+                T);
         return pa;
     }
-
-    public static <T extends JsonBeans> T read( Model model, String id, Class<T> T,
-            final Class<?>... secondaryClasses ) throws MissingAnnotation {
+    
+    public static <T extends JsonBeans> T read(Model model, String id, Class<T> T,
+            final Class<?>... secondaryClasses) throws MissingAnnotation {
         EntityManagerImpl em = (EntityManagerImpl) EntityManagerFactory.getEntityManager();
         T pa = em.read(
-                model.getResource( em.getSubject( T ).namespace() + id ),
-                T );
+                model.getResource(em.getSubject(T).namespace() + id),
+                T);
         return pa;
     }
-
-    public static Literal getUriFromId( String id, Class T ) {
+    
+    public static Literal getUriFromId(String id, Class T) {
         EntityManagerImpl em = (EntityManagerImpl) EntityManagerFactory.getEntityManager();
-        return ResourceFactory.createTypedLiteral( em.getSubject( T ).namespace() + id );
+        return ResourceFactory.createTypedLiteral(em.getSubject(T).namespace() + id);
     }
-
-    public static String getSparqlResultAsJson( String sparqlQuery ) {
-        logger.debug( String.format( "REQUETE SPARQL : %s", sparqlQuery ) );
+    
+    public static String getSparqlResultAsJson(String sparqlQuery) {
+        logger.debug(String.format("REQUETE SPARQL : %s", sparqlQuery));
         ResultSet results = null;
         QueryExecution qexec = null;
-        dataset.begin( ReadWrite.READ );
-
+        dataset.begin(ReadWrite.READ);
+        
         try {
-            Query query = QueryFactory.create( sparqlQuery );
-            qexec = QueryExecutionFactory.create( query, ConnectTDB.dataset );
+            Query query = QueryFactory.create(sparqlQuery);
+            qexec = QueryExecutionFactory.create(query, ConnectTDB.dataset);
             results = qexec.execSelect();
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            ResultSetFormatter.outputAsJSON( outStream, results );
+            ResultSetFormatter.outputAsJSON(outStream, results);
             qexec.close();
             return outStream.toString();
-        } catch ( Exception e ) {
-            logger.error( e.getMessage() );
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             return null;
         } finally {
-
+            
             dataset.end();
         }
     }
@@ -118,43 +120,44 @@ public class ConnectTDB extends HttpServlet {
     /**
      * @see Servlet#init(ServletConfig)
      */
-    public void init( ServletConfig config ) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         // proxy
         Properties prop = MstUtils.readMstConfig();
-        System.setProperty( "http.proxyHost", prop.getProperty( "http.proxyHost" ) );
-        System.setProperty( "http.proxyPort", prop.getProperty( "http.proxyPort" ) );
+        System.setProperty("http.proxyHost", prop.getProperty("http.proxyHost"));
+        System.setProperty("http.proxyPort", prop.getProperty("http.proxyPort"));
         // init triple store the first time
-        dataset = TDBFactory.createDataset( prop.getProperty( "tdb.directory" ) );
-        dataset.begin( ReadWrite.WRITE );
+        dataset = TDBFactory.createDataset(prop.getProperty("tdb.directory"));
+        dataset.begin(ReadWrite.WRITE);
         try {
-            GraphStore graphStore = GraphStoreFactory.create( dataset );
+            GraphStore graphStore = GraphStoreFactory.create(dataset);
             dataset.commit();
         } finally {
             // dataset.end();
         }
-        logger.error( "FIN CREATION TDB" );
+        logger.error("FIN CREATION TDB");
 
       //  ReasonerStudentClassificationService rs = new ReasonerStudentClassificationService("admin");
-      //  rs.GetResults();
-       
+        //  rs.GetResults();
+        ReasonerExerciceToDo a = new ReasonerExerciceToDo("admin");
+        logger.error("masterNot" + a.getExerciseToDo(a.getNotMasteredNotion()));
     }
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
+     * response)
      */
-    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         // TODO Auto-generated method stub
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
+     * response)
      */
-    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
             IOException {
         // TODO Auto-generated method stub
     }
-
+    
 }

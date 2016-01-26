@@ -1,4 +1,5 @@
 com/urcpo/mst/services/CourseMaterialService.class
+com/urcpo/mst/services/ReasonerExerciceToDo.class
 com/urcpo/mst/beans/Qcm.class
 com/urcpo/mst/beans/UserT.class
 com/urcpo/mst/services/ReasonerService.class

@@ -87,3 +87,17 @@ il faut que la version étudiante integre l'"annotatorious modifié" ainsi que l
 - on peut voir l'espace des concepts validés
 - selon la promotion, des pants de l'onto sont visibles ou non.
 - selon que l'élève est bon ou non, des pants de l'onto sont visible ou non (débloqués)
+
+
+# NEWS 3
+
+- barre de recherche dans document annoter (type de doc, mots clefs allant taper dans les libellés des concepts, si existant l'abstract description & autre.)
+- retirer la précision d'adéquation des concepts OK
+- une rubrique : mes exercices OK
+  - sont listés les exo qui sont possibles. (basés sur mes connaissances) OK
+- une rubrique : mes connaissances 
+
+# NEWS 4
+
+- Faire un panel qui montre les notions abordés par un qcm 
+  - 3 colonnes: les notions necessaires, notions abordées notions débloquées, (LABELS !)

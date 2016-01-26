@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.urcpo.mst.beans.Qcm;
 import com.urcpo.mst.services.CourseMaterialService;
 import com.urcpo.mst.services.QcmService;
+import com.urcpo.mst.services.ReasonerExerciceToDo;
 
 @Path( "/qcm" )
 public class QcmRestService {
@@ -194,6 +195,26 @@ public class QcmRestService {
             return Response.status( 500 ).build();
         }
     }
+    
+        @GET
+    @Path( "/qcmtodo/{usrUri}" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getQcmToDo( @PathParam( "usrUri" ) String usrUri ) {
+        QcmService userService = new QcmService();
+        try {
+          //  return Response.status( 200 ).entity( userService.getQcmTrys( usrUri ) )
+               ReasonerExerciceToDo a = new ReasonerExerciceToDo(usrUri);
+            //  return Response.status( 200 ).entity( userService.getQcms( userUid ) )
+            return Response.status(200).entity(a.getExerciseToDo(a.getNotMasteredNotion()))
+                    .header( "Access-Control-Allow-Origin", "*" )
+                    .build();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            log.error( e );
+            return Response.status( 500 ).build();
+        }
+    }
+    
     @POST
     @Path( "/qcmtry" )
     @Consumes( MediaType.APPLICATION_JSON )
