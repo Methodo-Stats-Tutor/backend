@@ -131,6 +131,22 @@ public class QcmRestService {
     }
     
     @GET
+    @Path( "/qcm/getQcmNotionSuggest/{uid}" )
+    @Produces( MediaType.APPLICATION_JSON )
+    public Response getQcmNotionSuggest( @PathParam( "uid" ) String uid ) {
+        QcmService qcmService = new QcmService();
+        try {
+            return Response.status( 200 ).entity( qcmService.getQcmNotionSuggest( uid ) )
+                    .header( "Access-Control-Allow-Origin", "*" )
+                    .build();
+        } catch ( Exception e ) {
+            // TODO Auto-generated catch block
+            log.error( e );
+            return Response.status( 500 ).build();
+        }
+    }
+    
+    @GET
     @Path( "/qcms/{userUid}" )
     @Produces( MediaType.APPLICATION_JSON )
     public Response getQcms( @PathParam( "userUid" ) String userUid ) {

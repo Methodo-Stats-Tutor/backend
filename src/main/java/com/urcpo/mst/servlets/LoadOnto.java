@@ -47,9 +47,9 @@ public class LoadOnto extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public LoadOnto() {
-        super();
-        // TODO Auto-generated constructor stub
+        super(); // TODO Auto-generated constructor stub
     }
+    
     public static void mergeOntos(){
         Properties prop = MstUtils.readMstConfig();
         String[] ontos = prop.getProperty( "onto.int" ).split( ";" ) ;
@@ -64,16 +64,11 @@ public class LoadOnto extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-
     public void init() throws ServletException {
         logger.debug( "initialisation" );
         FileOutputStream out = null;
         mergeOntos();
-        // dataset = TDBFactory.createDataset( fich );
         logger.info( "Query Result Sheet" );
-
-  
-
         logger.info( "Fin initialisation" );
         logger.info( "Début création publications" );
         Publications publis = null;
@@ -85,7 +80,6 @@ public class LoadOnto extends HttpServlet {
         try {
             publis = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "publications", Publications.class );
             qcms = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "qcms", Qcms.class );
-
             ConnectTDB.dataset.commit();
         } catch ( MissingAnnotation e ) {
         } finally {
