@@ -41,6 +41,7 @@ com/urcpo/mst/beans/ExternalConcept.class
 com/urcpo/mst/beans/CourseMaterial.class
 com/urcpo/mst/beans/User.class
 com/urcpo/mst/beans/QcmTry.class
+com/urcpo/mst/webservices/AdminRestService.class
 com/urcpo/mst/utils/UserEnum.class
 com/urcpo/mst/services/FilesService.class
 com/urcpo/mst/beans/Student.class

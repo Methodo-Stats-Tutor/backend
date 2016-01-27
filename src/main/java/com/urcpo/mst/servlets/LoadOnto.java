@@ -50,7 +50,7 @@ public class LoadOnto extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    private void mergeOntos(){
+    public static void mergeOntos(){
         Properties prop = MstUtils.readMstConfig();
         String[] ontos = prop.getProperty( "onto.int" ).split( ";" ) ;
         ontologie = ModelFactory.createDefaultModel();
@@ -72,27 +72,7 @@ public class LoadOnto extends HttpServlet {
         // dataset = TDBFactory.createDataset( fich );
         logger.info( "Query Result Sheet" );
 
-        
-        // logger.info("Query Result Sheet");
-        // InputStream in = null;
-        // try {
-        // in = new FileInputStream( fich );
-        // } catch ( FileNotFoundException e ) {
-        //
-        // logger.error( "Problème récupération du fichier : " + fich );
-        // e.printStackTrace();
-        //
-        // } // or any windows path
-        // ontologie.read( in, null );
-        // String queryString
-        // ="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
-        // "select ?uri  \n"+
-        // "where { \n"+
-        // "?uri  rdfs:subClassOf ?test \n"+
-        // "} \n ";
-
-        // logger.debug ( getSparqlResultAsJson(queryString) );
-        // ResultSetFormatter.out(out, resultSet, query);
+  
 
         logger.info( "Fin initialisation" );
         logger.info( "Début création publications" );

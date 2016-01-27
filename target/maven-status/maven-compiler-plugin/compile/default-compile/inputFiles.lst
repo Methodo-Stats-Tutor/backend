@@ -1,5 +1,6 @@
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/IdentService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Qcms.java
+/home/nps/workspace/mst/src/main/java/com/urcpo/mst/webservices/AdminRestService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/TupleService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/webservices/TupleRestService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/ReasonerExerciceToDo.java
@@ -19,10 +20,10 @@
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Exercice.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Tag.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/services/FilesService.java
+/home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/User.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/webservices/QcmRestService.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Publication.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/ExternalConcept.java
-/home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/User.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/utils/MstUtils.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/CourseMaterial.java
 /home/nps/workspace/mst/src/main/java/com/urcpo/mst/beans/Guest.java
