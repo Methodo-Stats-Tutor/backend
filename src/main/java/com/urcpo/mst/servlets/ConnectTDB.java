@@ -47,9 +47,9 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.urcpo.mst.beans.JsonBeans;
-import com.urcpo.mst.services.ReasonerExerciceToDo;
-import com.urcpo.mst.services.ReasonerQcmMaitriseNotion;
-import com.urcpo.mst.services.ReasonerStudentClassificationService;
+import com.urcpo.mst.reasoner.ReasonerExerciceToDo;
+import com.urcpo.mst.reasoner.ReasonerQcmMaitriseNotion;
+import com.urcpo.mst.reasoner.ReasonerStudentClassificationService;
 import com.urcpo.mst.utils.MstUtils;
 
 /**

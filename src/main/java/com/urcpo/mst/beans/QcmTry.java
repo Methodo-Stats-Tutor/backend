@@ -77,6 +77,10 @@ public class QcmTry implements JsonBeans {
         throw new EntityManagerRequiredException();
     }
     
+    @Predicate( impl = true )
+    public void setValidated( boolean bool ) {
+        throw new EntityManagerRequiredException();
+    }
     @Override
     @Predicate( impl = true )
     public Resource getResource() {

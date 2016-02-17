@@ -1,8 +1,8 @@
 package com.urcpo.mst.services;
 
+import com.urcpo.mst.reasoner.ReasonerQcmMaitriseNotion;
 import com.clarkparsia.pellet.sparqldl.jena.SparqlDLExecutionFactory;
 
-import java.util.GregorianCalendar;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -11,9 +11,7 @@ import org.xenei.jena.entities.MissingAnnotation;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
@@ -24,14 +22,14 @@ import com.urcpo.mst.beans.PubliZone;
 import com.urcpo.mst.beans.PublicationAnnot;
 import com.urcpo.mst.beans.Qcm;
 import com.urcpo.mst.beans.QcmTry;
-import com.urcpo.mst.beans.Qcms;
 import com.urcpo.mst.beans.Question;
-import com.urcpo.mst.beans.Tag;
+import com.urcpo.mst.beans.Student;
 import com.urcpo.mst.beans.Teacher;
 import com.urcpo.mst.beans.User;
 import com.urcpo.mst.servlets.ConnectTDB;
 import com.urcpo.mst.servlets.LoadOnto;
 import com.urcpo.mst.utils.MstUtils;
+import java.util.logging.Level;
 
 public class QcmService {
 
@@ -218,15 +216,21 @@ public class QcmService {
             ConnectTDB.dataset.begin(ReadWrite.WRITE);
             qcm = ConnectTDB.readWrite(
                     ConnectTDB.dataset.getDefaultModel(), qcmUid, Qcm.class);
-            for (int j = 0; j < jo.get("traite").getAsJsonArray().size(); j++) {
-                qcm.addTraiteNotion(java.net.URI.create(jo.get("traite").getAsJsonArray().get(j).getAsString()));
+            for (Map.Entry<String, JsonElement> entry : jo.get("traite").getAsJsonObject().entrySet()) {
+                qcm.addTraiteNotion(java.net.URI.create(entry.getKey().toString()));
             }
-            for (int j = 0; j < jo.get("give").getAsJsonArray().size(); j++) {
-                qcm.addGiveNotion(java.net.URI.create(jo.get("give").getAsJsonArray().get(j).getAsString()));
+            for (Map.Entry<String, JsonElement> entry : jo.get("give").getAsJsonObject().entrySet()) {
+                qcm.addGiveNotion(java.net.URI.create(entry.getKey().toString()));
             }
-            for (int j = 0; j < jo.get("need").getAsJsonArray().size(); j++) {
-                qcm.addNeedNotion(java.net.URI.create(jo.get("need").getAsJsonArray().get(j).getAsString()));
+            for (Map.Entry<String, JsonElement> entry : jo.get("need").getAsJsonObject().entrySet()) {
+                qcm.addNeedNotion(java.net.URI.create(entry.getKey().toString()));
             }
+//            for (int j = 0; j < jo.get("give").getAsJsonArray().size(); j++) {
+//                qcm.addGiveNotion(java.net.URI.create(jo.get("give").getAsJsonArray().get(j).getAsString()));
+//            }
+//            for (int j = 0; j < jo.get("need").getAsJsonArray().size(); j++) {
+//                qcm.addNeedNotion(java.net.URI.create(jo.get("need").getAsJsonArray().get(j).getAsString()));
+//            }
             ConnectTDB.dataset.commit();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -284,18 +288,18 @@ public class QcmService {
     public String getQcmTrys(String userUid) throws Exception {
         String sparqlQueryString = "PREFIX mst: <http://methodo-stats-tutor.com#>\n"
                 + "SELECT * { \n"
-                + "                ?qcm a mst:Qcm .\n"
-                + "                 ?qcm mst:name  ?name .\n"
-                + "                 ?qcm mst:d8Add ?d8add .\n"
-                + "                 OPTIONAL{?qcm mst:teacher ?teacher .\n"
-                + "                 ?teacher mst:nom ?fname .\n"
-                + "                 ?teacher mst:prenom ?lname }.\n"
-                + "                 ?qcm mst:difficulty ?difficulty .\n"
-                + "                  OPTIONAL{?qcmtry mst:refersQcm ?qcm .\n"
-                + "                  ?qcmtry mst:finished false .\n"
-                + "                ?qcmtry mst:json ?json .\n"
-                + "                 ?qcmtry mst:user mst:" + userUid + " }\n"
-                + "                 }";
+                + "?qcm a mst:Qcm .\n"
+                + "?qcm mst:name  ?name .\n"
+                + "?qcm mst:d8Add ?d8add .\n"
+                + "OPTIONAL{?qcm mst:teacher ?teacher .\n"
+                + "?teacher mst:nom ?fname .\n"
+                + "?teacher mst:prenom ?lname }.\n"
+                + "?qcm mst:difficulty ?difficulty .\n"
+                + "OPTIONAL{?qcmtry mst:refersQcm ?qcm .\n"
+                + "?qcmtry mst:finished false .\n"
+                + "?qcmtry mst:json ?json .\n"
+                + "?qcmtry mst:user mst:" + userUid + " }\n"
+                + "}";
         return ConnectTDB.getSparqlResultAsJson(sparqlQueryString);
     }
 
@@ -461,7 +465,7 @@ public class QcmService {
         return last.toString();
     }
 
-    // déduit les notions manipulées par ce qcm
+    // suggère les notions manipulées par ce qcm
     public String getQcmNotionSuggest(String qcmUid) {
         ReasonerQcmMaitriseNotion rq = new ReasonerQcmMaitriseNotion(qcmUid);
         String str = rq.getQcmNotion();
@@ -469,7 +473,6 @@ public class QcmService {
     }
 
     // déduit les notions manipulées par ce qcm
-
     public String getQcmNotion(String qcmUid) {
         String queryBegin
                 = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
@@ -481,8 +484,6 @@ public class QcmService {
                 + "WHERE {";
         String queryEnd = "}";
 
-        // create a query that asks for the color of the wine that
-        // would go with each meal course
         String queryStr2
                 = queryBegin
                 + "{?EXO a mst:Qcm .\n"
@@ -522,4 +523,43 @@ public class QcmService {
         ConnectTDB.dataset.end();
         return str;
     }
+
+    public void setQcmValidate(String student, String qcmtry) {
+        ConnectTDB.dataset.begin(ReadWrite.WRITE);
+        try {
+            Student s = ConnectTDB.readWrite(ConnectTDB.dataset.getDefaultModel(), student, Student.class);
+            QcmTry qt = ConnectTDB.readWrite(ConnectTDB.dataset.getDefaultModel(), qcmtry, QcmTry.class);
+            Qcm q = qt.getRefersQcm();
+            s.addHasValidateExo(q);
+            qt.setValidated(true);
+            ConnectTDB.dataset.commit();
+        } catch (MissingAnnotation ex) {
+            java.util.logging.Logger.getLogger(QcmService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectTDB.dataset.end();
+        }
+
+    }
+
+    //pour un étudiant et un  qcm donné, retourne tous les essais réalisés
+    public String getStudentQcmtrys(String usrUid, String qcmUid) {
+        String prefix
+                = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX mst:  <http://methodo-stats-tutor.com#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl:  <http://www.w3.org/2002/07/owl#>\n";
+
+        String sparqlQueryString = "SELECT ?qcmtry ?d8last ?mark ?validated { "
+                + "?qcmtry a mst:QcmTry ."
+                + "?qcmtry mst:refersQcm  ?qcm ."
+                + "?qcmtry mst:d8Last  ?d8last ."
+                + "?qcmtry mst:mark  ?mark ."
+                + "OPTIONAL{ ?qcmtry mst:validated  ?validated }"
+                + "FILTER ( ?qcm = mst:" + qcmUid + " )"
+                + "} ORDER BY ASC(?d8last)";
+        
+        return ConnectTDB.getSparqlResultAsJson(prefix + sparqlQueryString);
+    }
+    
+    //
 }

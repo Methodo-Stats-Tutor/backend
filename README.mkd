@@ -101,3 +101,16 @@ il faut que la version étudiante integre l'"annotatorious modifié" ainsi que l
 
 - Faire un panel qui montre les notions abordés par un qcm 
   - 3 colonnes: les notions necessaires, notions abordées notions débloquées, (LABELS !)
+
+
+#NEWS 5
+
+- maitriser une notion à condition que les crédits soient remplis
+- les crédits sont par défaut 10 et peuvent etre édités.
+- la regle compare la valeur de l'étudiant a ce crédit 
+- les crédits de l'étudiant pour tel ou tel concept sont recalculés à chaque fin d'exo
+- Qcm -> Epreuve 
+- ajouter les exo réussis
+- choux js
+- recherche inférée (moteur)
+- dump/import de base de fait

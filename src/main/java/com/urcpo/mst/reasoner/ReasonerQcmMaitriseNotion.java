@@ -1,56 +1,25 @@
-package com.urcpo.mst.services;
+package com.urcpo.mst.reasoner;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.mindswap.pellet.jena.PelletReasonerFactory;
-import org.xenei.jena.entities.EntityManagerFactory;
-import org.xenei.jena.entities.MissingAnnotation;
-import org.xenei.jena.entities.impl.EntityManagerImpl;
 
 import com.clarkparsia.pellet.sparqldl.jena.SparqlDLExecutionFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
-import com.hp.hpl.jena.query.ReadWrite;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.urcpo.mst.servlets.ConnectTDB;
 import com.urcpo.mst.utils.MstUtils;
-import com.urcpo.mst.webservices.CourseMaterialRestService;
-import com.urcpo.mst.beans.PubliZone;
-import com.urcpo.mst.beans.Publication;
-import com.urcpo.mst.beans.PublicationAnnot;
-import com.urcpo.mst.beans.Publications;
-import com.urcpo.mst.beans.Tag;
-import com.urcpo.mst.beans.Teacher;
-import com.urcpo.mst.beans.User;
-import com.hp.hpl.jena.ontology.Individual;
-import com.hp.hpl.jena.ontology.OntClass;
-import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.ontology.OntProperty;
-import com.hp.hpl.jena.ontology.OntResource;
-import com.hp.hpl.jena.ontology.Restriction;
-import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -59,10 +28,6 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.PrintUtil;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ReasonerQcmMaitriseNotion extends ReasonerService {
     private static final Logger     log = Logger.getLogger( ReasonerQcmMaitriseNotion.class );
@@ -164,7 +129,6 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
 
         while ( results.hasNext() ) {
             RDFNode a = results.next().get( "?NOTION" );
-            log.error( "MORT" + a.asLiteral().getString() );
             giveNotion.add( java.net.URI.create( a.asLiteral().getString() ) );
             needNotion.addAll( getSuperClassFromUri( a.asLiteral().getString() ) );
 
@@ -216,8 +180,6 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
                         "WHERE {";
         String queryEnd = "}";
 
-        // create a query that asks for the color of the wine that
-        // would go with each meal course
 
         String queryStr2 =
                 queryBegin +

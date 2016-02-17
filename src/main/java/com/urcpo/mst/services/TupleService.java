@@ -15,25 +15,26 @@ import com.urcpo.mst.servlets.ConnectTDB;
 import com.urcpo.mst.servlets.LoadOnto;
 
 public class TupleService {
-    private static final Logger log = Logger.getLogger( TupleService.class );
+
+    private static final Logger log = Logger.getLogger(TupleService.class);
 
     public String getTuples() throws Exception {
         ResultSet results = null;
 
-        ConnectTDB.dataset.begin( ReadWrite.READ );
+        ConnectTDB.dataset.begin(ReadWrite.READ);
         String sparqlQueryString = "SELECT * { ?s ?p ?o   }";
-        Query query = QueryFactory.create( sparqlQueryString );
-        QueryExecution qexec = QueryExecutionFactory.create( query, ConnectTDB.dataset );
+        Query query = QueryFactory.create(sparqlQueryString);
+        QueryExecution qexec = QueryExecutionFactory.create(query, ConnectTDB.dataset);
         try {
 
             results = qexec.execSelect();
 
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            ResultSetFormatter.outputAsJSON( outStream, results );
+            ResultSetFormatter.outputAsJSON(outStream, results);
             return outStream.toString();
-        } catch ( Exception e ) {
-            log.error( e.getMessage() );
-            throw new Exception( "ERREUR dans TupleService.getTuples" );
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new Exception("ERREUR dans TupleService.getTuples");
         } finally {
             qexec.close();
 
@@ -41,101 +42,130 @@ public class TupleService {
         }
     }
 
-    public String getQuery( String query ) throws Exception {
+    public String getQuery(String query) throws Exception {
 
         try {
-            return ConnectTDB.getSparqlResultAsJson( query );
-        } catch ( Exception e ) {
-            throw new Exception( e.getMessage() );
+            return ConnectTDB.getSparqlResultAsJson(query);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
         }
     }
-    
-    public String getQueryOnto( String query ) throws Exception {
+
+    public String getQueryOnto(String query) throws Exception {
 
         try {
-           
-            return LoadOnto.getSparqlResultAsJson( query );
-        } catch ( Exception e ) {
-            throw new Exception( e.getMessage() );
+
+            return LoadOnto.getSparqlResultAsJson(query);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
         }
     }
-    public String getChildrenOnto( String query ) throws Exception {
+
+    public String getChildrenOnto(String query) throws Exception {
 
         try {
-            String query2 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-                    "PREFIX obo: <http://purl.obolibrary.org/obo/>\n" + 
-                    "SELECT ?label ?id  ?hasChildren \n" + 
-                    "WHERE \n" + 
-                    "{\n" + 
-                    "{\n" + 
-                    "SELECT ?id  (count(?t ) as ?hasChildren) \n" + 
-                    "WHERE {?id rdfs:subClassOf <"+query+"> .\n" + 
-                    "\n" + 
-                    "OPTIONAL {?t rdfs:subClassOf ?id . } .\n" + 
-                    "}\n" + 
-                    "GROUP BY ?id\n" + 
-                    "}\n" + 
-                    "OPTIONAL {?id rdfs:label ?label. } .\n" + 
-        //            "OPTIONAL {?id obo:IAO_0000115 ?descr. } .\n" + 
+            String query2 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+                    + "SELECT ?label ?id  ?hasChildren \n"
+                    + "WHERE \n"
+                    + "{\n"
+                    + "{\n"
+                    + "SELECT ?id  (count(?t ) as ?hasChildren) \n"
+                    + "WHERE {?id rdfs:subClassOf <" + query + "> .\n"
+                    + "\n"
+                    + "OPTIONAL {?t rdfs:subClassOf ?id . } .\n"
+                    + "}\n"
+                    + "GROUP BY ?id\n"
+                    + "}\n"
+                    + "OPTIONAL {?id rdfs:label ?label. } .\n"
+                    + //            "OPTIONAL {?id obo:IAO_0000115 ?descr. } .\n" + 
                     "}";
-            return LoadOnto.getSparqlResultAsJson( query2 );
-        } catch ( Exception e ) {
-            throw new Exception( e.getMessage() );
+            return LoadOnto.getSparqlResultAsJson(query2);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
         }
     }
-    
-    
-    
-    public String getOntoIdInfo( String id ) throws Exception {
+
+    public String getOntoIdInfo(String id) throws Exception {
 
         try {
-            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-                    "PREFIX obo: <http://purl.obolibrary.org/obo/>\n" + 
-                    "SELECT  ?descr ?rcommand  \n" + 
-                    "WHERE\n" + 
-                    "{\n" + 
-                    "OPTIONAL{<" + id + "> obo:IAO_0000115 ?descr}.\n" + 
-                    "OPTIONAL{<" + id + "> obo:STATO_0000041 ?rcommand}.\n"+
-                    "}";
-            return LoadOnto.getSparqlResultAsJson( query );
-        } catch ( Exception e ) {
-            throw new Exception( e.getMessage() );
+            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+                    + "SELECT  ?descr ?rcommand  \n"
+                    + "WHERE\n"
+                    + "{\n"
+                    + "OPTIONAL{<" + id + "> obo:IAO_0000115 ?descr}.\n"
+                    + "OPTIONAL{<" + id + "> obo:STATO_0000041 ?rcommand}.\n"
+                    + "}";
+            return LoadOnto.getSparqlResultAsJson(query);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
         }
     }
-    public String getQueryOntoSearch( String pattern ) throws Exception {
+
+    public String getQueryOntoSearch(String pattern) throws Exception {
 
         try {
-            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-                    "PREFIX obo: <http://purl.obolibrary.org/obo/>\n" + 
-                    "SELECT DISTINCT ?id ?label ?hasChildren\n" + 
-                    "WHERE {\n" + 
-                    "{\n" + 
-                    "{ ?s rdfs:label ?o } UNION { ?s obo:IAO_0000115 ?o } UNION { ?s rdfs:comment ?o }.\n" + 
-                    "FILTER regex(?o, \""+pattern+"\", \"i\")\n" + 
-                    "}\n" + 
-                    "{?id rdfs:label ?label} UNION  { ?id obo:IAO_0000115 ?label } UNION { ?id rdfs:comment ?label }.\n" + 
-                    "FILTER (?id = ?s)\n" + 
-                    "{\n" + 
-                    "SELECT ?label ?s  ?hasChildren\n" + 
-                    "WHERE\n" + 
-                    "{\n" + 
-                    "{\n" + 
-                    "SELECT ?s  (count(?s ) as ?hasChildren)\n" + 
-                    "WHERE {?s1 rdfs:subClassOf ?s .}\n" + 
-                    "GROUP BY ?s\n" + 
-                    "}\n" + 
-                    "}\n" + 
-                    "}\n" + 
-                    "}\n" + 
-                    "";
-            return LoadOnto.getSparqlResultAsJson( query );
-        } catch ( Exception e ) {
-            throw new Exception( e.getMessage() );
+            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+                    + "SELECT DISTINCT ?id ?label ?hasChildren\n"
+                    + "WHERE {\n"
+                    + "{\n"
+                    + "{ ?s rdfs:label ?o } UNION { ?s obo:IAO_0000115 ?o } UNION { ?s rdfs:comment ?o }.\n"
+                    + "FILTER regex(?o, \"" + pattern + "\", \"i\")\n"
+                    + "}\n"
+                    + "{?id rdfs:label ?label} UNION  { ?id obo:IAO_0000115 ?label } UNION { ?id rdfs:comment ?label }.\n"
+                    + "FILTER (?id = ?s)\n"
+                    + "{\n"
+                    + "SELECT ?label ?s  ?hasChildren\n"
+                    + "WHERE\n"
+                    + "{\n"
+                    + "{\n"
+                    + "SELECT ?s  (count(?s ) as ?hasChildren)\n"
+                    + "WHERE {?s1 rdfs:subClassOf ?s .}\n"
+                    + "GROUP BY ?s\n"
+                    + "}\n"
+                    + "}\n"
+                    + "}\n"
+                    + "}\n"
+                    + "";
+            return LoadOnto.getSparqlResultAsJson(query);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         } finally {
         }
     }
+
+    public String getOntoDetails(String uids) throws Exception {
+        
+        try {
+            String queryBegin
+                    = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                    + "PREFIX mst: <http://methodo-stats-tutor.com#>\n"
+                    + "PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX owl:      <http://www.w3.org/2002/07/owl#> \n"
+                    + "PREFIX sparqldl: <http://pellet.owldl.com/ns/sdle#>\n "
+                    + "SELECT ?NOTION ?NOTIONLAB ?NOTIONCOMM  \n"
+                    + "WHERE {";
+            String queryEnd = "}";
+
+        // create a query that asks for the color of the wine that
+            // would go with each meal course
+            String query
+                    = queryBegin
+                    + "OPTIONAL { ?NOTION rdfs:label ?NOTIONLAB } .\n"
+                    + "OPTIONAL { ?NOTION rdfs:comment ?NOTIONCOMM } \n"
+                    + "FILTER (?NOTION = mst:" + uids + ")\n"
+                    + queryEnd;
+            return LoadOnto.getSparqlResultAsJson(query);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } finally {
+        }
+    }
+
 }
