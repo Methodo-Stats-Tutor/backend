@@ -81,6 +81,7 @@ public class LoadOnto extends HttpServlet {
             publis = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "publications", Publications.class );
             qcms = ConnectTDB.readWrite( ConnectTDB.dataset.getDefaultModel(), "qcms", Qcms.class );
             ConnectTDB.dataset.commit();
+            logger.info("On a ecrit");
         } catch ( MissingAnnotation e ) {
         } finally {
             ConnectTDB.dataset.end();

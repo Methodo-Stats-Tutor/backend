@@ -19,6 +19,7 @@ import org.xenei.jena.entities.MissingAnnotation;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -27,6 +28,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.urcpo.mst.beans.User;
 import com.urcpo.mst.services.IdentService;
 import com.urcpo.mst.services.QcmService;
+import com.urcpo.mst.servlets.ConnectTDB;
 import com.urcpo.mst.utils.MstUtils;
 import com.urcpo.mst.utils.UserEnum;
 
@@ -149,7 +151,7 @@ public class IdentRestService {
 
             String username = jo.get( "username" ).getAsString();
             String password = jo.get( "password" ).getAsString();
-
+           log.info("BABAR1!");
             Client client = Client.create();
             WebResource webResource = client
                     .resource( appServ + "/mst/rest/ident/admin" );
@@ -159,7 +161,7 @@ public class IdentRestService {
             // Get the protected web page:
             webResource = client.resource( appServ+"/mst/rest/ident/admin" );
         
-
+           log.info("BABAR2!");
             ClientResponse response = webResource.get( ClientResponse.class );
             if ( response.getStatus() != 200 ) {// pas admin...
                 webResource = client.resource( appServ+"/mst/rest/ident/teacher" );
@@ -188,24 +190,35 @@ public class IdentRestService {
             } else {// admin
                 type = UserEnum.admin;
             }
+                       log.info("BABAR3!");
             IdentService ids = new IdentService();
+          
             User usr = ids.setUser( username, type );
+       
+           log.info("BABAR4!");
+                ConnectTDB.dataset.begin(ReadWrite.READ);
             String name = usr.getNom() + " " + usr.getPrenom();
-            JsonObject dataset = new JsonObject();
+                
+           // JsonObject dataset = new JsonObject();
+                   log.info("ici 4!");
             // add the property album_id to the dataset
             Gson gs = new Gson();
             JsonElement jes = gs.fromJson( usr.toJson(), JsonElement.class );
+             ConnectTDB.dataset.end();
             JsonObject jos = jes.getAsJsonObject();
             jos.addProperty( "role", type.toString() );
+              log.info("ici 5!");
 //            dataset.addProperty( "userId", username );
 //            dataset.addProperty( "userFName", usr.getPrenom() );
 //            dataset.addProperty( "userLName", usr.getNom() );
 //            dataset.addProperty( "userD8Add", MstUtils.quoteDate( usr.getD8Add() ) );
 //            dataset.addProperty( "userRole", type.toString() );
             log.error( credentials );
+              log.info("ici 5!");
             return Response.status( 200 ).entity( jos.toString() )
                     .header( "Access-Control-Allow-Origin", "*" ).build();
         } catch ( Exception e ) {
+            log.error("identerror"+e.getMessage());
             return Response.status( 500 ).entity( e.getMessage() ).header( "Access-Control-Allow-Origin", "*" )
                     .build();
         }
