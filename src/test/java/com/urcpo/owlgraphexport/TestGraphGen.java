@@ -20,11 +20,11 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.OWL2;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import static com.hp.hpl.jena.vocabulary.RDFS.Resource;
-import com.urcpo.owlgraphexport.beans.User;
+import com.urcpo.mstr.owlgraphexport.beans.User;
 
 public class TestGraphGen {
 //private static String OWLFILE = "/home/nps/Projets/stat-tutor/OWL/graph_tester.rdf";
-    private static String OWLFILE = "/app/mst/ontologies/int/mst.owl";
+    private static String OWLFILE = "/app/mstr/ontologies/int/mst.owl";
 
     @Before
     public void init() {
@@ -32,7 +32,7 @@ public class TestGraphGen {
 
     @Test
     public void test() throws FileNotFoundException, UnsupportedEncodingException  {
-//        Resource root = ResourceFactory.createResource("http://methodo-stats-tutor.com#ExternalConcept");
+//        Resource root = ResourceFactory.createResource("http://methodo-stat-tutor.com#ExternalConcept");
 //        GraphGenRoot ggr = new GraphGenRoot( OWLFILE,  root, RDFS.subClassOf );
 //        ggr.pushNodesInDiaFromRoot();
 //        ggr.pushEdgesInDia();

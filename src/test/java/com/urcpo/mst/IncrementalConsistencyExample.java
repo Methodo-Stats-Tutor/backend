@@ -54,7 +54,7 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.urcpo.mst.servlets.ConnectTDB;
+import com.urcpo.mstr.servlets.ConnectTDB;
 /**
  * An example to show how to use OWLReasoner class. This example creates a JTree that displays the
  * class hierarchy. This is a simplified version of the class tree displayed in SWOOP.
@@ -140,7 +140,7 @@ public class IncrementalConsistencyExample {
         //query
         String queryBegin = 
                 "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
-                "PREFIX mst: <http://www.semanticweb.org/nps/ontologies/2015/11/untitled-ontology-9#>\r\n" + 
+                "PREFIX mstr: <http://www.semanticweb.org/nps/ontologies/2015/11/untitled-ontology-9#>\r\n" + 
                 "PREFIX wine: <http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine#>\r\n" + 
                 "\r\n" + 
                 "SELECT * \r\n" + 
@@ -151,9 +151,9 @@ public class IncrementalConsistencyExample {
                 // would go with each meal course
                 String queryStr2 =
                 queryBegin + 
-                "   ?user mst:nePasProposerExercise ?bloq .\r\n" + 
-                "   ?debloq a mst:Exercise .\r\n" + 
-                "   ?bloq mst:dependsOn ?depends .\r\n" + 
+                "   ?user mstr:nePasProposerExercise ?bloq .\r\n" + 
+                "   ?debloq a mstr:Exercise .\r\n" + 
+                "   ?bloq mstr:dependsOn ?depends .\r\n" + 
                 "   FILTER (?bloq != ?debloq) .\r\n" + 
 
                 queryEnd;
@@ -205,7 +205,7 @@ public class IncrementalConsistencyExample {
 
 String queryBegin = 
 "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" + 
-"PREFIX mst: <http://www.semanticweb.org/nps/ontologies/2015/11/untitled-ontology-9#>\r\n" + 
+"PREFIX mstr: <http://www.semanticweb.org/nps/ontologies/2015/11/untitled-ontology-9#>\r\n" + 
 "PREFIX wine: <http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine#>\r\n" + 
 "\r\n" + 
 "SELECT * \r\n" + 
@@ -216,7 +216,7 @@ String queryEnd = "}";
 // would go with each meal course
 String queryStr2 =
 queryBegin + 
-"   ?Meal mst:nePasProposerExercise ?exo .\r\n" + 
+"   ?Meal mstr:nePasProposerExercise ?exo .\r\n" + 
 queryEnd;
 Query query2 = QueryFactory.create( queryStr2 );
 

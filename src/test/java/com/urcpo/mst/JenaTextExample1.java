@@ -44,12 +44,12 @@ public class JenaTextExample1
         // Here , in-memory base data and in-memeory Lucene index
         // Base data
       //  Dataset ds1 = DatasetFactory.createMem() ; 
-         Dataset         ds1 = TDBFactory.createDataset("/app/mst/triple-store");
+         Dataset         ds1 = TDBFactory.createDataset("/app/mstr/triple-store");
         // Define the index mapping 
         EntityDefinition entDef = new EntityDefinition("uri", "text", RDFS.label.asNode()) ;
         // Lucene, in memory.
   //      Directory dir =  new RAMDirectory();
-        Directory dir = FSDirectory.open(new File("/app/mst/lucene"));
+        Directory dir = FSDirectory.open(new File("/app/mstr/lucene"));
         
         // Join together into a dataset
         Dataset ds = TextDatasetFactory.createLucene(ds1, dir, entDef,null) ;

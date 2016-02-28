@@ -2,10 +2,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.urcpo</groupId>
-    <artifactId>mst</artifactId>
+    <artifactId>mstr</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>mst Maven Webapp</name>
+    <version>0.0.2-SNAPSHOT</version>
+    <name>mstr Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -225,7 +225,7 @@
 
     </dependencies>
     <build>
-        <finalName>mst</finalName>
+        <finalName>mstr</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -31,8 +31,8 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.OWL2;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
-import com.urcpo.mst.services.QcmService;
-import com.urcpo.mst.servlets.ConnectTDB;
+import com.urcpo.mstr.services.QcmService;
+import com.urcpo.mstr.servlets.ConnectTDB;
 import com.hp.hpl.jena.reasoner.Reasoner;
 import com.hp.hpl.jena.reasoner.ValidityReport;
 

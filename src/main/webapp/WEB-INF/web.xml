@@ -2,20 +2,20 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" metadata-complete="false" version="3.0">
 <display-name>Archetype Created Web Application</display-name>
 
-<servlet>
-  <servlet-name>Upload</servlet-name>  
-  <servlet-class>com.urcpo.mst.servlets.PubliUpload</servlet-class>
-  <init-param>
-		<param-name>chemin</param-name> 
-		<param-value>/opt/apache-tomcat-7.0.57/webapps/mst_files/publi/brute/</param-value> 
-	</init-param>
-	<multipart-config>
-		<location>/tmp/</location>
-		<max-file-size>10485760</max-file-size> <!-- 10 Mo -->
-		<max-request-size>52428800</max-request-size> <!-- 5 x 10 Mo -->
-		<file-size-threshold>1048576</file-size-threshold> <!-- 1 Mo -->
-	</multipart-config>
- </servlet>
+<!--<servlet>-->
+  <!--<servlet-name>Upload</servlet-name>  -->
+  <!--<servlet-class>com.urcpo.mst.servlets.PubliUpload</servlet-class>-->
+  <!--<init-param>-->
+		<!--<param-name>chemin</param-name> -->
+		<!--<param-value>/opt/apache-tomcat-7.0.57/webapps/mst_files/publi/brute/</param-value> -->
+	<!--</init-param>-->
+	<!--<multipart-config>-->
+		<!--<location>/tmp/</location>-->
+		<!--<max-file-size>10485760</max-file-size> [> 10 Mo <]-->
+		<!--<max-request-size>52428800</max-request-size> [> 5 x 10 Mo <]-->
+		<!--<file-size-threshold>1048576</file-size-threshold> [> 1 Mo <]-->
+	<!--</multipart-config>-->
+ <!--</servlet>-->
  
  
 <!-- spring for cxf -->
@@ -29,7 +29,7 @@
 
     <init-param>
         <param-name>com.sun.jersey.config.property.packages</param-name>
-        <param-value>com.urcpo.mst.webservices</param-value>
+        <param-value>com.urcpo.mstr.webservices</param-value>
     </init-param>
 
     <init-param>
