@@ -32,12 +32,14 @@ public class TestGraphGen {
 
     @Test
     public void test() throws FileNotFoundException, UnsupportedEncodingException  {
-        Resource root = ResourceFactory.createResource("http://methodo-stats-tutor.com#ExternalConcept");
-        GraphGenRoot ggr = new GraphGenRoot( OWLFILE, 5, root, RDFS.subClassOf );
-        ggr.pushNodesInDiaFromRoot();
-        ggr.pushEdgesInDia();
-        PrintWriter writer = new PrintWriter( "/home/nps/owljson.json", "UTF-8" );
-        writer.println( GraphFormater.toCystoscape( ggr.getDia() ) );
-        writer.close();
+//        Resource root = ResourceFactory.createResource("http://methodo-stats-tutor.com#ExternalConcept");
+//        GraphGenRoot ggr = new GraphGenRoot( OWLFILE,  root, RDFS.subClassOf );
+//        ggr.pushNodesInDiaFromRoot();
+//        ggr.pushEdgesInDia();
+//      //  PrintWriter writer = new PrintWriter( "/home/nps/owljson.json", "UTF-8" );
+//       // writer.println( GraphFormater.toCystoscape( ggr.getDia() ) );
+//       // writer.close();
+//                System.out.println( GraphFormater.toCystoscape( ggr.getDia() ) );
+
     }
 }

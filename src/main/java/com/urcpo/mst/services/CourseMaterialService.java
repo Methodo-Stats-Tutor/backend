@@ -27,6 +27,7 @@ import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.urcpo.mst.servlets.LoadOnto;
 
 public class CourseMaterialService {
     private static final Logger log = Logger.getLogger( CourseMaterialService.class );
@@ -54,7 +55,8 @@ public class CourseMaterialService {
                 + "SELECT * "
                 + " { "
                 + " ?cm a mst:CourseMaterial ."
-                + " ?cm a  ?type . FILTER(?type != mst:CourseMaterial) ."
+                + " ?cm a  ?type . "
+                + " FILTER(?type != mst:CourseMaterial) ."//on ne garde que son type
                 + " ?cm mst:title  ?title ."
                 + " ?cm mst:d8Add ?d8add ."
                 + " ?cm mst:fileName ?fileName ."

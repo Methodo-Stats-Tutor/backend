@@ -12,90 +12,94 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-@Subject( namespace = "http://methodo-stats-tutor.com#" )
+@Subject(namespace = "http://methodo-stats-tutor.com#")
 public abstract class CourseMaterial implements JsonBeans {
 
-    @Predicate( impl = true )
-    public void setAuthor( String ens ) {
+    @Predicate(impl = true)
+    public void setAuthor(String ens) {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( impl = true )
+    @Predicate(impl = true)
     public Teacher getTeacher() {
         throw new EntityManagerRequiredException();
     }
-    @Predicate( impl = true )
+
+    @Predicate(impl = true)
     public void setTeacher(Teacher ens) {
         throw new EntityManagerRequiredException();
     }
 
-
-    @Predicate( impl = true )
-    public void removeAuthor( Teacher ens ) {
+    @Predicate(impl = true)
+    public void removeAuthor(Teacher ens) {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( impl = true )
-    public void setD8Add( XSDDateTime ens ) {
+    @Predicate(impl = true)
+    public void setD8Add(XSDDateTime ens) {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( impl = true )
+    @Predicate(impl = true)
     public XSDDateTime getD8Add() {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( impl = true )
+    @Predicate(impl = true)
     public String getAuthor() {
         throw new EntityManagerRequiredException();
 
     }
 
-    @Predicate( impl = true, name="needNotion" )
+    @Predicate(impl = true, name = "needNotion")
     public ArrayList<java.net.URI> getNeedNotion() {
         throw new EntityManagerRequiredException();
 
     }
-    
-    @Predicate( impl = true )
+
+    @Predicate(impl = true)
     public void addNeedNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }
-    
-    @Predicate( impl = true, name="needNotion" )
+
+    @Predicate(impl = true, name = "needNotion")
     public void removeNeedNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }
-    @Predicate( impl = true, name="giveNotion" )
+
+    @Predicate(impl = true, name = "giveNotion")
     public ArrayList<java.net.URI> getGiveNotion() {
         throw new EntityManagerRequiredException();
 
     }
-    @Predicate( impl = true )
+
+    @Predicate(impl = true)
     public void addGiveNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }
-    
-    @Predicate( impl = true, name="giveNotion" )
+
+    @Predicate(impl = true, name = "giveNotion")
     public void removeGiveNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }
-    @Predicate( impl = true, name="traiteNotion" )
+
+    @Predicate(impl = true, name = "traiteNotion")
     public ArrayList<java.net.URI> getTraiteNotion() {
         throw new EntityManagerRequiredException();
 
     }
-    @Predicate( impl = true )
+
+    @Predicate(impl = true)
     public void addTraiteNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 
     }
-    
-    @Predicate( impl = true, name="traiteNotion" )
+
+    @Predicate(impl = true, name = "traiteNotion")
     public void removeTraiteNotion(java.net.URI uri) {
         throw new EntityManagerRequiredException();
 

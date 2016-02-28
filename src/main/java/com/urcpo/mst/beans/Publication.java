@@ -56,7 +56,7 @@ public class Publication extends CourseMaterial implements JsonBeans {
     public String getAbstract() {
         throw new EntityManagerRequiredException();
     }
-    @Predicate( impl = true ,emptyIsNull=true)
+    @Predicate( impl = true , emptyIsNull=true)
     public void setAbstract( String pmid ) {
         throw new EntityManagerRequiredException();
     }

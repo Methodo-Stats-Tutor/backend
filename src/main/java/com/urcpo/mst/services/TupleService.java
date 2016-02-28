@@ -11,8 +11,18 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ReadWrite;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.urcpo.mst.servlets.ConnectTDB;
 import com.urcpo.mst.servlets.LoadOnto;
+import static com.urcpo.mst.servlets.LoadOnto.ontologie;
+import com.urcpo.owlgraphexport.GraphFormater;
+import com.urcpo.owlgraphexport.GraphGenRoot;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class TupleService {
 
@@ -131,8 +141,8 @@ public class TupleService {
                     + "}\n"
                     + "}\n"
                     + "}\n"
-                    + "}\n"
-                    + "";
+                    + "}\n";
+
             return LoadOnto.getSparqlResultAsJson(query);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -141,7 +151,7 @@ public class TupleService {
     }
 
     public String getOntoDetails(String uids) throws Exception {
-        
+
         try {
             String queryBegin
                     = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
@@ -153,7 +163,7 @@ public class TupleService {
                     + "WHERE {";
             String queryEnd = "}";
 
-        // create a query that asks for the color of the wine that
+            // create a query that asks for the color of the wine that
             // would go with each meal course
             String query
                     = queryBegin
@@ -166,6 +176,47 @@ public class TupleService {
             throw new Exception(e.getMessage());
         } finally {
         }
+    }
+
+    public String getOntoCytoGraph(String usrId) throws FileNotFoundException {
+        //récupérer les concepts maitrisés
+        String queryBegin
+                = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX mst: <http://methodo-stats-tutor.com#>\n"
+                + "PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl:      <http://www.w3.org/2002/07/owl#> \n"
+                + "PREFIX sparqldl: <http://pellet.owldl.com/ns/sdle#>\n "
+                + "CONSTRUCT {?USR mst:masterNotion ?NOTIONBIND}\n"
+                + "WHERE {";
+        String queryEnd = "}";
+
+        String query
+                = queryBegin
+                + "?USR mst:masterNotion ?NOTION  .\n"
+                + "BIND(IRI(str(?NOTION)) as ?NOTIONBIND) .\n"
+                + "?USR a mst:Student \n"
+                + "FILTER (?USR = mst:" + usrId + ")\n"
+                + queryEnd;
+        ConnectTDB.dataset.begin(ReadWrite.WRITE);
+        Query q = QueryFactory.create(query);
+        QueryExecution qexec = QueryExecutionFactory.create(q, ConnectTDB.dataset);
+        Model modelNotion = qexec.execConstruct();
+//        log.error(query);
+         OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream("/tmp/modelNotion.xml");
+            modelNotion.write(outputStream, "RDF/XML");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        ConnectTDB.dataset.end();
+
+        Resource root = ResourceFactory.createResource("http://methodo-stats-tutor.com#ExternalConcept");
+        GraphGenRoot ggr = new GraphGenRoot(LoadOnto.ontologie, modelNotion, root, RDFS.subClassOf);
+        ggr.pushNodesInDiaFromRoot();
+        ggr.pushEdgesInDia();
+        return GraphFormater.toCystoscape(ggr.getDia());
     }
 
 }

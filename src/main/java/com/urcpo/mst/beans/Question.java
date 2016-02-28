@@ -1,19 +1,14 @@
 package com.urcpo.mst.beans;
 
-import org.joda.time.DateTime;
 import org.xenei.jena.entities.EntityManagerRequiredException;
 import org.xenei.jena.entities.annotations.Predicate;
 import org.xenei.jena.entities.annotations.Subject;
 
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.urcpo.mst.utils.MstUtils;
 
 import java.util.ArrayList;
@@ -65,7 +60,7 @@ public class Question implements JsonBeans {
         throw new EntityManagerRequiredException();
     }
 
-    @Predicate( impl = true ,emptyIsNull=true )
+    @Predicate( impl = true , emptyIsNull=true )
     public void setStatement( String ens ) {
         throw new EntityManagerRequiredException();
 

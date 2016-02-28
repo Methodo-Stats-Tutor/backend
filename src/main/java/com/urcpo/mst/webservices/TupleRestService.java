@@ -23,11 +23,13 @@ public class TupleRestService {
             return Response.status(500).entity(e.getMessage()).header("Access-Control-Allow-Origin", "*").build();
         }
     }
+
     //récupérer les details d'une ontologie MST, à partir de son uid
-   @GET
+
+    @GET
     @Path("/getOntoDetails/{uid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOntoDetails(@PathParam( "uid" ) String uid) {
+    public Response getOntoDetails(@PathParam("uid") String uid) {
         TupleService ts = new TupleService();
         try {
             return Response.status(200).entity(ts.getOntoDetails(uid)).header("Access-Control-Allow-Origin", "*").build();
@@ -35,10 +37,26 @@ public class TupleRestService {
             return Response.status(500).entity(e.getMessage()).header("Access-Control-Allow-Origin", "*").build();
         }
     }
+
+    //récupérer les details d'une ontologie MST, à partir de son uid
+
+    @GET
+    @Path("/getOntoCytoGraph/{usrId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOntoCytoGraph(@PathParam("usrId") String usrId) {
+        TupleService ts = new TupleService();
+        try {
+            return Response.status(200).entity(ts.getOntoCytoGraph(usrId)).header("Access-Control-Allow-Origin", "*").build();
+        } catch (Exception e) {
+            return Response.status(500).entity(e.getMessage()).header("Access-Control-Allow-Origin", "*").build();
+        }
+    }
+    
     @POST
     @Path("/getQuery/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
+
     public Response getQuery(String query) {
         TupleService ts = new TupleService();
         try {
@@ -135,7 +153,14 @@ public class TupleRestService {
                 .header("Access-Control-Allow-Headers", "Content-Type").header("Access-Control-Max-Age", "86400")
                 .header("Allow", "GET, HEAD, POST, TRACE, OPTIONS").build();
     }
-
+    @OPTIONS
+    @Path("/getOntoCytoGraph/{usrId}")
+    public Response getOntoCytoGraph() {
+        return Response.ok().header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST")
+                .header("Access-Control-Allow-Headers", "Content-Type").header("Access-Control-Max-Age", "86400")
+                .header("Allow", "GET, HEAD, POST, TRACE, OPTIONS").build();
+    }
     @POST
     @Path("/getOntoIdInfo/")
     @Consumes(MediaType.APPLICATION_JSON)

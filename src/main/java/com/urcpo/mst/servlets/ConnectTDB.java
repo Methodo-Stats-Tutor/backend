@@ -55,6 +55,8 @@ import com.urcpo.mst.reasoner.ReasonerQcmMaitriseNotion;
 import com.urcpo.mst.reasoner.ReasonerStudentClassificationService;
 import com.urcpo.mst.utils.MstUtils;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import org.apache.jena.query.text.EntityDefinition;
 import org.apache.jena.query.text.TextDatasetFactory;
@@ -128,6 +130,37 @@ public class ConnectTDB extends HttpServlet {
         }
     }
 
+    public static String getSparqlResultAsJsonFromReasoner(String sparqlQuery, OntModel om) {
+        logger.debug(String.format("REQUETE SPARQL : %s", sparqlQuery));
+        ResultSet results = null;
+        QueryExecution qexec = null;
+        dataset.begin(ReadWrite.READ);
+        OntModel ontModel = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC,ModelFactory.createUnion(ModelFactory.createDefaultModel().read( "/app/mst/ontologies/int/mst.owl" ), dataset.getDefaultModel()));
+ OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream("/tmp/testOnt.xml");
+            ontModel.write(outputStream, "RDF/XML");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+             Query query = QueryFactory.create(sparqlQuery);
+            qexec = QueryExecutionFactory.create(query, ontModel );
+            results = qexec.execSelect();
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            ResultSetFormatter.outputAsJSON(outStream, results);
+            qexec.close();
+            return outStream.toString();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+        } finally {
+
+            dataset.end();
+        }
+    }
+
     /**
      * @see Servlet#init(ServletConfig)
      */
@@ -137,11 +170,13 @@ public class ConnectTDB extends HttpServlet {
         System.setProperty("http.proxyHost", prop.getProperty("http.proxyHost"));
         System.setProperty("http.proxyPort", prop.getProperty("http.proxyPort"));
         // init triple store the first time
-    // Dataset dataset1 = TDBFactory.createDataset(prop.getProperty("tdb.directory"));
-       
-      //    EntityDefinition entDef = new EntityDefinition("uri", "text", RDFS.label.asNode()) ;
+        dataset = DatasetFactory.assemble("/app/mst/config/text-config.ttl", "http://localhost/jena_example/#text_dataset");
+        logger.error("FIN CREATION TDB");
+        // Dataset dataset1 = TDBFactory.createDataset(prop.getProperty("tdb.directory"));
+
+        //    EntityDefinition entDef = new EntityDefinition("uri", "text", RDFS.label.asNode()) ;
         // Lucene, in memory.
-      //  Directory dir =  null;
+        //  Directory dir =  null;
 //        try {
 //            dir = FSDirectory.open(new File("/app/mst/lucene"));
 //        } catch (IOException ex) {
@@ -153,15 +188,9 @@ public class ConnectTDB extends HttpServlet {
 //        } catch (IOException ex) {
 //          logger.info("avance-1");
 //        }
-     
         // Join together into a dataset
-         
-
-      // dataset = TextDatasetFactory.createLucene(dataset1, dir, entDef,null) ;
-dataset = DatasetFactory.assemble("/home/nps/text-config.ttl", "http://localhost/jena_example/#text_dataset") ;
-     logger.info("avance0");
-
-      //  dataset = DatasetFactory.assemble("/app/mst/config/text-config.ttl", "http://localhost/jena_example/#text_dataset");
+        // dataset = TextDatasetFactory.createLucene(dataset1, dir, entDef,null) ;
+        //  dataset = DatasetFactory.assemble("/app/mst/config/text-config.ttl", "http://localhost/jena_example/#text_dataset");
         //  dataset.end();
 //        dataset.begin(ReadWrite.WRITE);
 //        try {
@@ -170,8 +199,6 @@ dataset = DatasetFactory.assemble("/home/nps/text-config.ttl", "http://localhost
 //        } finally {
 //            dataset.end();
 //        }
-        logger.error("FIN CREATION TDB");
-
         //  ReasonerStudentClassificationService rs = new ReasonerStudentClassificationService("admin");
         //  rs.GetResults();
         //     ReasonerExerciceToDo a = new ReasonerExerciceToDo("admin");

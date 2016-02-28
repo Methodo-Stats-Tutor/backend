@@ -83,15 +83,6 @@ public class IdentService {
             if (jo.has("fName")) {
                 qcm.setPrenom(jo.get("fName").getAsString());
             }
-            dataset.begin(ReadWrite.WRITE);
-            Resource r = ConnectTDB.dataset.getDefaultModel().createResource("13");
-            r.addProperty(RDFS.label, ConnectTDB.dataset.getDefaultModel().createLiteral("TITI"));
-            //adding new stmt
-            Resource r2 = ConnectTDB.dataset.getDefaultModel().createResource("23");
-            r2.addProperty(RDFS.label, ConnectTDB.dataset.getDefaultModel().createLiteral("TOTO"));
-            dataset.commit();
-            dataset.end();
-
             ConnectTDB.dataset.commit();
         } catch (Exception e) {
             log.error(MstUtils.formatLog(e));

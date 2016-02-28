@@ -1,5 +1,6 @@
 package com.urcpo.mst.reasoner;
 
+import com.clarkparsia.pellet.rules.model.Rule;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -23,6 +24,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.log4j.Level;
+import org.mindswap.pellet.KnowledgeBase;
+import org.mindswap.pellet.jena.PelletInfGraph;
 import org.xenei.jena.entities.MissingAnnotation;
 
 //déduit les notions maitrisées par un étudiant, et les ajoute aux notions maitrisées.
@@ -123,6 +126,7 @@ public class ReasonerStudentMasterNotion extends ReasonerService {
         }
     }
 //ajoute à un étudiant donné les notions maitrisées
+
     public String setNotionMaster() {
         ConnectTDB.dataset.begin(ReadWrite.WRITE);
         try {

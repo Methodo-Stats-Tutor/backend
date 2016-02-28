@@ -1,23 +1,21 @@
 package com.urcpo.owlgraphexport.beans;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.hp.hpl.jena.ontology.OntResource;
+import com.hp.hpl.jena.rdf.model.Model;
+import java.util.Iterator;
 
 public class Diagram {
     private List<Element> nodes = new ArrayList<Element>();
     private List<Element> edges = new ArrayList<Element>();
 
-    public void addNode( OntResource node ) {
+    public void addNode( OntResource node, Model modelNotion ) {
         Node n = new Node();
         n.setResource( node );
         n.setId( node.getLocalName() );
+        n.setPercentFinished(node,modelNotion);
         nodes.add( n );
     }
 
@@ -40,15 +38,19 @@ public class Diagram {
     }
 
     public String toCystoscape() {
-        return "elements:{\nnodes:[\n" + listToString( nodes ) + "],\nedges:[\n" + listToString( edges ) + "] \n}";
+        return "{\n\"nodes\":[\n" + listToString( nodes ) + "],\n\"edges\":[\n" + listToString( edges ) + "] \n }" ;
     }
 
     private String listToString( List<Element> eles ) {
         StringBuilder res = new StringBuilder();
-        for ( Element ele : eles ) {
-            res.append( ele.toCystoscape() );
+        
+        Iterator<Element> elIt = eles.iterator();
+        while(elIt.hasNext()){
+         res.append( elIt.next().toCystoscape() );
+            if(elIt.hasNext())
             res.append( ",\n" );
         }
+//        
         return res.toString();
     }
 }

@@ -26,8 +26,8 @@ public class Edge extends Element {
     }
 
     public String toCystoscape() {
-        return "{ data:{ source:" + Str.quote( source.getLocalName() ) + ", target:"
+        return "{ \"data\":{ \"source\":" + Str.quote( source.getLocalName() ) + ", \"target\":"
                 + Str.quote( target.getLocalName() ) + " }"+
-                propsToCystoscape() +", strength:70 }";
+                propsToCystoscape() +", \"strength\":70 }";
     }
 }

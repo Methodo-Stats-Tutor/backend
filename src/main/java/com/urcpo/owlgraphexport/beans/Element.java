@@ -16,7 +16,7 @@ public abstract class Element {
     abstract String toCystoscape();
     
     protected String propsToCystoscape(){
-        return ", grabbable: false, classes:'test' ";
+        return ", \"grabbable\": true, \"classes\":\"test\" ";
         
     }
 }
