@@ -9,6 +9,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.urcpo.mstr.servlets.LoadOnto;
 
 public abstract class ReasonerService {
     private static final Logger log = Logger.getLogger( ReasonerService.class );
@@ -22,7 +23,7 @@ public abstract class ReasonerService {
     public abstract void processResults();
 
     protected void mergeModelsInSubModel( Model... mods ) {
-        subModel = ModelFactory.createDefaultModel().read( "/app/mstr/ontologies/int/mst.owl" );
+        subModel = LoadOnto.ontologie;
         int i = 0;
         for ( Model mod : mods ) {
             FileOutputStream outputStream;

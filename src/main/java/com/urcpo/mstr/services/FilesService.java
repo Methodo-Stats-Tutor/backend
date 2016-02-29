@@ -1,35 +1,15 @@
 package com.urcpo.mstr.services;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.apache.log4j.Logger;
-import org.xenei.jena.entities.MissingAnnotation;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.ReadWrite;
-import com.urcpo.mstr.beans.Admin;
-import com.urcpo.mstr.beans.Guest;
 import com.urcpo.mstr.beans.Picture;
 import com.urcpo.mstr.beans.Publication;
 import com.urcpo.mstr.beans.Publications;
-import com.urcpo.mstr.beans.Qcm;
-import com.urcpo.mstr.beans.QcmTry;
-import com.urcpo.mstr.beans.Student;
 import com.urcpo.mstr.beans.Teacher;
-import com.urcpo.mstr.beans.User;
 import com.urcpo.mstr.servlets.ConnectTDB;
 import com.urcpo.mstr.utils.MstrUtils;
-import com.urcpo.mstr.utils.UserEnum;
 
 public class FilesService {
 

@@ -84,14 +84,14 @@ public class ReasonerValidateExo extends ReasonerService {
     public void reasonOverSubModel() {
 
         ontModel = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC, subModel);
-        OutputStream outputStream;
-        try {
-            outputStream = new FileOutputStream("/tmp/testOnt.xml");
-            ontModel.write(outputStream, "RDF/XML");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        OutputStream outputStream;
+//        try {
+//          //  outputStream = new FileOutputStream("/tmp/testOnt.xml");
+//           // ontModel.write(outputStream, "RDF/XML");
+//        } catch (FileNotFoundException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
 
     }
 

@@ -46,8 +46,8 @@ public class ReasonerQcmMaitriseNotion extends ReasonerService {
     public void createSubModel() {
         ConnectTDB.dataset.begin( ReadWrite.WRITE );
         String queryBegin =
-                "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\r\n" +
-                        "PREFIX mstr: <http://methodo-stat-tutor.com#>\r\n" +
+                "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                        "PREFIX mstr: <http://methodo-stat-tutor.com#>\n" +
                         "\r\n" +
                         "CONSTRUCT { " +
                         "?EXO a mstr:Exercice .\n" +
